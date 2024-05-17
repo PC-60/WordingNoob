@@ -240,24 +240,22 @@
             "pregnant": "prgnnt",
             "pregnancy": "prgnncy",
             "fetus": "fts",
-            "fetuses": "fts"
-            // Add your replacement words here, for example:
-            // "badword": "replacement"
+            "fetuses": "fts" // Add your replacements here
         };
 
         function processText(action) {
             let inputText = document.getElementById('inputText').value;
-            let processedText = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
+            let processedResult = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
 
-            processedText = removeContinuousDots(processedText);
-            processedText = removeRepeatedWords(processedText);
+            processedResult.plainText = removeContinuousDots(processedResult.plainText);
+            processedResult.plainText = removeRepeatedWords(processedResult.plainText);
 
-            document.getElementById('outputText').innerHTML = processedText.highlightedText;
-            document.getElementById('outputText').dataset.plainText = processedText.plainText;
+            document.getElementById('outputText').innerHTML = processedResult.highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedResult.plainText;
 
             let replacementsList = document.getElementById('replacementsList');
-            replacementsList.innerHTML = `<p><strong>Total changes: ${processedText.changesCount}</strong></p>`;
-            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(processedText.changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${processedText.changes[key]}</span></li>`).join('') + `</ul>`;
+            replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(processedResult.changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${processedResult.changes[key]}</span></li>`).join('') + `</ul>`;
         }
 
         function replaceWords(text) {
@@ -271,7 +269,7 @@
 
                 for (let key in replacements) {
                     const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    if (regex.test(lowerStrippedWord) && strippedWord.toLowerCase() === key) {
+                    if (regex.test(lowerStrippedWord)) {
                         const replacement = replacements[key];
                         const replacedWord = word.replace(regex, replacement);
                         if (replacedWord !== word) {
@@ -310,7 +308,7 @@
 
                 for (let key in replacements) {
                     const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    if (regex.test(lowerStrippedWord) && strippedWord.toLowerCase() === key) {
+                    if (regex.test(lowerStrippedWord)) {
                         if (!changes[key]) {
                             changes[key] = 0;
                         }
