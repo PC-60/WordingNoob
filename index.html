@@ -241,7 +241,7 @@
             "pregnant": "prgnnt",
             "pregnancy": "prgnncy",
             "fetus": "fts",
-            "fetuses": "fts" // Add your replacements here
+            "fetuses": "fts"  // Add your replacements here
         };
 
         function processText(action) {
@@ -270,9 +270,10 @@
 
                 for (let key in replacements) {
                     const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    if (regex.test(lowerStrippedWord)) {
+                    const regexEd = new RegExp(`\\b${key}(ed|ing)\\b`, 'gi');
+                    if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
                         const replacement = replacements[key];
-                        const replacedWord = word.replace(regex, replacement);
+                        const replacedWord = word.replace(regex, replacement).replace(regexEd, replacement);
                         if (replacedWord !== word) {
                             if (!changes[key]) {
                                 changes[key] = 0;
@@ -309,7 +310,8 @@
 
                 for (let key in replacements) {
                     const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    if (regex.test(lowerStrippedWord)) {
+                    const regexEd = new RegExp(`\\b${key}(ed|ing)\\b`, 'gi');
+                    if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
                         if (!changes[key]) {
                             changes[key] = 0;
                         }
