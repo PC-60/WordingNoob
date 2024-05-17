@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Processor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px auto;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .output-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .output-section .output-text {
+            width: 100%;
+            height: 150px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #e8f5e9;
+            overflow: auto;
+            white-space: pre-wrap;
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background: #f9f9f9;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        ul li span {
+            background-color: #4CAF50;
+            color: white;
+            padding: 3px 7px;
+            border-radius: 3px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text Processor</h1>
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+        <button onclick="processText()">Process Text</button>
+        <div class="output-section">
+            <div id="outputText" class="output-text"></div>
+            <button onclick="copyOutput()">Copy to Clipboard</button>
+            <div id="replacementsList"></div>
+        </div>
+    </div>
+    <script>
+       const replacements = {
+            "sex": "sec",
+            "fuck": "fck",
+            "breast": "mellons",
+            "penis": "pp",
+            "vagina": "pp",
+            "dick": "pp",
+            "cock": "pp",
+            "pussy": "pp",
+            "balls": "ball",
+            "bitch": "beach",
+            "nipple": "mellons",
+            "boob": "mellons",
+            "tit": "mellons",
+            "virgin": "version",
+            "fucking": "fcking",
+            "fucked": "fcked",
+            "cum": "come",
+            "ass": "butt",
+            "asshole": "butt",
+            "moan": "mmmm",
+            "shaft": " ",
+            "stroke": " ",
+            "lick": "lik",
+            "suck": "sck",
+            "lust": "lusssst",
+            "slut": "slt",
+            "whore": "whr",
+            "porn": "prn",
+            "rape": "rpe",
+            "fag": "fg",
+            "faggot": "fgot",
+            "retard": "retd",
+            "spic": "spk",
+            "coon": "cn",
+            "chink": "chk",
+            "nigger": "ngr",
+            "nigga": "nga",
+            "dyke": "dyk",
+            "kike": "kk",
+            "tranny": "trny",
+            "homo": "hmo",
+            "queer": "qer",
+            "gook": "gk",
+            "bastard": "bstrd",
+            "damn": "dmn",
+            "shit": "sht",
+            "crap": "crp",
+            "piss": "pss",
+            "douche": "dche",
+            "anal": "anl",
+            "oral": "orl",
+            "blowjob": "blwjb",
+            "handjob": "hndjb",
+            "milf": "mlf",
+            "twink": "twk",
+            "twinkie": "twke",
+            "orgasm": "orgsm",
+            "masturbate": "mstrbte",
+            "masturbation": "mstrbtn",
+            "ejaculate": "ejclte",
+            "ejaculation": "ejcltn",
+            "clit": "clt",
+            "clitoris": "cltros",
+            "gonads": "gnds",
+            "pubic": "pbic",
+            "genital": "gntl",
+            "genitals": "gntls",
+            "fetish": "ftsh",
+            "bondage": "bndge",
+            "dominatrix": "dmntrx",
+            "sodomize": "sdmze",
+            "sodomy": "sdmy",
+            "whorehouse": "whrehse",
+            "whoremonger": "whremngr",
+            "incest": "incst",
+            "necrophilia": "ncrphlia",
+            "bestiality": "bstlty",
+            "beastiality": "bstlty",
+            "pedophile": "pdphle",
+            "pedophilia": "pdphlia",
+            "zoophilia": "zphlia",
+            "child porn": "chld prn",
+            "child pornography": "chld prngrphy",
+            "hentai": "hntai",
+            "titty": "ttty",
+            "titties": "tties",
+            "boner": "bner",
+            "hard on": "hrd on",
+            "nude": "nde",
+            "nudity": "ndty",
+            "orgy": "orgy",
+            "gangbang": "gngbng",
+            "gang bang": "gng bng",
+            "bukkake": "bkkke",
+            "bukakke": "bkkke",
+            "vulva": "vlva",
+            "vulvas": "vlvas",
+            "labia": "lbia",
+            "labiaplasty": "lbplsty",
+            "penectomy": "pnctmy",
+            "penoplasty": "pnplsty",
+            "scrotum": "scrtm",
+            "testicle": "tstcl",
+            "testicles": "tstcls",
+            "foreskin": "frskn",
+            "smegma": "smgma",
+            "menstruate": "mnstrte",
+            "menstruation": "mnstrtn",
+            "period": "prd",
+            "ovulate": "ovlte",
+            "ovulation": "ovltn",
+            "uterus": "utrs",
+            "cervix": "crvx",
+            "cervical": "crvcl",
+            "endometrium": "ndmtrm",
+            "fallopian": "fllpn",
+            "fallopian tube": "fllpn tbe",
+            "ovary": "ovry",
+            "ovaries": "ovries",
+            "puberty": "pbrty",
+            "pubes": "pbz",
+            "pubic hair": "pbic hr",
+            "erect": "erct",
+            "erection": "erctn",
+            "ejaculate": "ejclte",
+            "ejaculation": "ejcltn",
+            "conception": "cncptn",
+            "contraception": "cntrcptn",
+            "contraceptive": "cntrcptv",
+            "birth control": "brth cntrl",
+            "abortion": "abtn",
+            "miscarriage": "mscrge",
+            "pregnant": "prgnnt",
+            "pregnancy": "prgnncy",
+            "fetus": "fts",
+            "fetuses": "fts"
+        };
+
+        function replaceWords(text) {
+            const replacedWords = [];
+            const changes = {};
+            let changesCount = 0;
+
+            const words = text.split(/\b/).map(word => {
+                let strippedWord = word.replace(/[^a-zA-Z]/g, '');
+                let lowerStrippedWord = strippedWord.toLowerCase();
+
+                for (let key in replacements) {
+                    const regex = new RegExp(`\\b${key}\\b`, 'gi');
+                    if (regex.test(lowerStrippedWord) && strippedWord.toLowerCase() === key) {
+                        const replacement = replacements[key];
+                        const replacedWord = word.replace(regex, replacement);
+                        if (replacedWord !== word) {
+                            if (!changes[key]) {
+                                changes[key] = 0;
+                            }
+                            changes[key]++;
+                            replacedWords.push(`${word} -> ${replacedWord}`);
+                            changesCount++;
+                            return {
+                                highlighted: `<span class="highlight">${replacedWord}</span>`,
+                                plain: replacedWord
+                            };
+                        }
+                    }
+                }
+                return { highlighted: word, plain: word };
+            });
+
+            return {
+                highlightedText: words.map(w => w.highlighted).join(''),
+                plainText: words.map(w => w.plain).join(''),
+                replacedWords,
+                changes,
+                changesCount
+            };
+        }
+
+        function removeContinuousDots(text) {
+            return text.replace(/\.{3,}/g, '');
+        }
+
+        function removeRepeatedWords(text) {
+            return text.split(/[.!?]/).map(sentence => {
+                let words = sentence.trim().split(/\s+/);
+                let result = [];
+                let lastWord = '';
+                let count = 0;
+                for (let word of words) {
+                    if (word === lastWord) {
+                        count++;
+                        if (count < 4) {
+                            result.push(word);
+                        }
+                    } else {
+                        lastWord = word;
+                        count = 1;
+                        result.push(word);
+                    }
+                }
+                return result.join(' ');
+            }).join('. ');
+        }
+
+        function processText() {
+            let inputText = document.getElementById('inputText').value;
+            let { highlightedText, plainText, replacedWords, changes, changesCount } = replaceWords(inputText);
+            let processedText = removeContinuousDots(plainText);
+            processedText = removeRepeatedWords(processedText);
+
+            document.getElementById('outputText').innerHTML = highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedText;
+
+            let replacementsList = document.getElementById('replacementsList');
+            replacementsList.innerHTML = `<p><strong>Total changes: ${changesCount}</strong></p>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${changes[key]}</span></li>`).join('') + `</ul>`;
+        }
+
+        function copyOutput() {
+            const outputText = document.getElementById('outputText').dataset.plainText;
+            const textarea = document.createElement('textarea');
+            textarea.value = outputText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+            alert('Output copied to clipboard');
+        }
+    </script>
+</body>
+</html>
