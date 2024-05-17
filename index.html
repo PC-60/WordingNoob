@@ -45,7 +45,7 @@
             color: white;
             border: none;
             border-radius: 4px;
-            margin-bottom: 20px;
+            margin: 5px;
         }
         button:hover {
             background-color: #45a049;
@@ -95,7 +95,8 @@
     <div class="container">
         <h1>Text Processor</h1>
         <textarea id="inputText" placeholder="Enter your text here..."></textarea>
-        <button onclick="processText()">Process Text</button>
+        <button onclick="processText('replace')">Replace Words</button>
+        <button onclick="processText('delete')">Delete Words</button>
         <div class="output-section">
             <div id="outputText" class="output-text"></div>
             <button onclick="copyOutput()">Copy to Clipboard</button>
@@ -103,7 +104,7 @@
         </div>
     </div>
     <script>
-       const replacements = {
+        const replacements = {
             "sex": "sec",
             "fuck": "fck",
             "breast": "mellons",
@@ -240,7 +241,24 @@
             "pregnancy": "prgnncy",
             "fetus": "fts",
             "fetuses": "fts"
+            // Add your replacement words here, for example:
+            // "badword": "replacement"
         };
+
+        function processText(action) {
+            let inputText = document.getElementById('inputText').value;
+            let processedText = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
+
+            processedText = removeContinuousDots(processedText);
+            processedText = removeRepeatedWords(processedText);
+
+            document.getElementById('outputText').innerHTML = processedText.highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedText.plainText;
+
+            let replacementsList = document.getElementById('replacementsList');
+            replacementsList.innerHTML = `<p><strong>Total changes: ${processedText.changesCount}</strong></p>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(processedText.changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${processedText.changes[key]}</span></li>`).join('') + `</ul>`;
+        }
 
         function replaceWords(text) {
             const replacedWords = [];
@@ -282,6 +300,39 @@
             };
         }
 
+        function deleteWords(text) {
+            const changes = {};
+            let changesCount = 0;
+
+            const words = text.split(/\b/).map(word => {
+                let strippedWord = word.replace(/[^a-zA-Z]/g, '');
+                let lowerStrippedWord = strippedWord.toLowerCase();
+
+                for (let key in replacements) {
+                    const regex = new RegExp(`\\b${key}\\b`, 'gi');
+                    if (regex.test(lowerStrippedWord) && strippedWord.toLowerCase() === key) {
+                        if (!changes[key]) {
+                            changes[key] = 0;
+                        }
+                        changes[key]++;
+                        changesCount++;
+                        return {
+                            highlighted: '',
+                            plain: ''
+                        };
+                    }
+                }
+                return { highlighted: word, plain: word };
+            });
+
+            return {
+                highlightedText: words.map(w => w.highlighted).join(''),
+                plainText: words.map(w => w.plain).join(''),
+                changes,
+                changesCount
+            };
+        }
+
         function removeContinuousDots(text) {
             return text.replace(/\.{3,}/g, '');
         }
@@ -306,20 +357,6 @@
                 }
                 return result.join(' ');
             }).join('. ');
-        }
-
-        function processText() {
-            let inputText = document.getElementById('inputText').value;
-            let { highlightedText, plainText, replacedWords, changes, changesCount } = replaceWords(inputText);
-            let processedText = removeContinuousDots(plainText);
-            processedText = removeRepeatedWords(processedText);
-
-            document.getElementById('outputText').innerHTML = highlightedText;
-            document.getElementById('outputText').dataset.plainText = processedText;
-
-            let replacementsList = document.getElementById('replacementsList');
-            replacementsList.innerHTML = `<p><strong>Total changes: ${changesCount}</strong></p>`;
-            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${changes[key]}</span></li>`).join('') + `</ul>`;
         }
 
         function copyOutput() {
