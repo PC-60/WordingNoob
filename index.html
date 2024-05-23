@@ -274,7 +274,7 @@
 
                 for (let key in replacements) {
                     const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    const regexEd = new RegExp(`\\b${key}(ed|ing|es|s)\\b`, 'gi');
+                    const regexEd =new RegExp(`\\b${key}(ed|ing|es|s)\\b`, 'gi');
                     if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
                         const replacement = replacements[key];
                         const replacedWord = word.replace(regex, replacement).replace(regexEd, replacement);
