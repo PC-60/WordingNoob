@@ -674,12 +674,13 @@
             replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(processedResult.changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${processedResult.changes[key]}</span></li>`).join('') + `</ul>`;
         }
 
-        function replaceWords(text) {
+       function replaceWords(text) {
     const replacedWords = [];
     const changes = {};
     let changesCount = 0;
 
-    const words = text.split(/\s+/).map(word => {
+    // Split the text by word boundaries while preserving the formatting
+    const words = text.split(/(\s+|\b)/).map(word => {
         let originalWord = word;
         let modifiedWord = word;
 
@@ -718,9 +719,10 @@
         };
     });
 
+    // Join the text back together while preserving original formatting
     return {
-        highlightedText: words.map(w => w.highlighted).join(' '),
-        plainText: words.map(w => w.plain).join(' '),
+        highlightedText: words.map(w => w.highlighted).join(''),
+        plainText: words.map(w => w.plain).join(''),
         replacedWords,
         changes,
         changesCount
