@@ -675,45 +675,57 @@
         }
 
         function replaceWords(text) {
-            const replacedWords = [];
-            const changes = {};
-            let changesCount = 0;
+    const replacedWords = [];
+    const changes = {};
+    let changesCount = 0;
 
-            const words = text.split(/\b/).map(word => {
-                let strippedWord = word.replace(/[^a-zA-Z]/g, '');
-                let lowerStrippedWord = strippedWord.toLowerCase();
+    const words = text.split(/\s+/).map(word => {
+        let originalWord = word;
+        let modifiedWord = word;
 
-                for (let key in replacements) {
-                    const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    const regexEd =new RegExp(`\\b${key}(ed|ing|es|s)\\b`, 'gi');
-                    if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
-                        const replacement = replacements[key];
-                        const replacedWord = word.replace(regex, replacement).replace(regexEd, replacement);
-                        if (replacedWord !== word) {
-                            if (!changes[key]) {
-                                changes[key] = 0;
-                            }
-                            changes[key]++;
-                            replacedWords.push(`${word} -> ${replacedWord}`);
-                            changesCount++;
-                            return {
-                                highlighted: `<span class="highlight">${replacedWord}</span>`,
-                                plain: replacedWord
-                            };
-                        }
-                    }
-                }
-                return { highlighted: word, plain: word };
-            });
-
-            return {
-                highlightedText: words.map(w => w.highlighted).join(''),
-                plainText: words.map(w => w.plain).join(''),
-                replacedWords,
-                changes,
-                changesCount
-            };
+        // Step 1: Replace special characters within words
+        for (let key in replacements) {
+            const regex = new RegExp(`${key}`, 'g'); // Match any occurrence of the special character
+            if (regex.test(modifiedWord)) {
+                const replacement = replacements[key];
+                modifiedWord = modifiedWord.replace(regex, replacement);
+            }
         }
+
+        // Step 2: Handle suffixes like ing, ed, etc.
+        for (let key in replacements) {
+            const regexWholeWord = new RegExp(`\\b${key}\\b`, 'gi');
+            const regexWithSuffix = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
+            if (regexWholeWord.test(modifiedWord) || regexWithSuffix.test(modifiedWord)) {
+                const replacement = replacements[key];
+                modifiedWord = modifiedWord.replace(regexWholeWord, replacement).replace(regexWithSuffix, replacement);
+            }
+        }
+
+        if (modifiedWord !== originalWord) {
+            const changeKey = originalWord.toLowerCase();
+            if (!changes[changeKey]) {
+                changes[changeKey] = 0;
+            }
+            changes[changeKey]++;
+            replacedWords.push(`${originalWord} -> ${modifiedWord}`);
+            changesCount++;
+        }
+
+        return {
+            highlighted: modifiedWord !== originalWord ? `<span class="highlight">${modifiedWord}</span>` : originalWord,
+            plain: modifiedWord
+        };
+    });
+
+    return {
+        highlightedText: words.map(w => w.highlighted).join(' '),
+        plainText: words.map(w => w.plain).join(' '),
+        replacedWords,
+        changes,
+        changesCount
+    };
+}
 
         function deleteWords(text) {
             const changes = {};
