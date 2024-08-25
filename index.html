@@ -97,6 +97,7 @@
         <textarea id="inputText" placeholder="Enter your text here..."></textarea>
         <button onclick="processText('replace')">Replace Words</button>
         <button onclick="processText('delete')">Delete Words</button>
+        <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
         <div class="output-section">
             <div id="outputText" class="output-text"></div>
             <button onclick="copyOutput()">Copy to Clipboard</button>
@@ -105,7 +106,10 @@
     </div>
     <script>
         const replacements = {
-             "lust": "affection",
+            // Add your regular word replacements here
+            "lust": "affection",
+            "hard": "strong",
+            "lust": "affection",
         "hard": "strong",
         "beautiful": "appealing",
         "breasts": "chest",
@@ -151,136 +155,6 @@
     "Uchiha": "uhchiha",
     "Hokage": "hohkahgay",
     "Shinobi": "shinohbee",
-            "À": "A",
-    "Á": "A",
-    "Â": "A",
-    "Ã": "A",
-    "Ä": "A",
-    "Å": "A",
-    "Ā": "A",
-    "Ą": "A",
-    "Ă": "A",
-    "Ç": "C",
-    "Ć": "C",
-    "Č": "C",
-    "Ĉ": "C",
-    "Ċ": "C",
-    "È": "E",
-    "É": "E",
-    "Ê": "E",
-    "Ë": "E",
-    "Ē": "E",
-    "Ę": "E",
-    "Ě": "E",
-    "Ĕ": "E",
-    "Ė": "E",
-    "Ì": "I",
-    "Í": "I",
-    "Î": "I",
-    "Ï": "I",
-    "Ī": "I",
-    "Ĩ": "I",
-    "Ĭ": "I",
-    "Į": "I",
-    "İ": "I",
-    "Ñ": "N",
-    "Ń": "N",
-    "Ň": "N",
-    "Ņ": "N",
-    "Ŋ": "N",
-    "Ò": "O",
-    "Ó": "O",
-    "Ô": "O",
-    "Õ": "O",
-    "Ö": "O",
-    "Ō": "O",
-    "Ő": "O",
-    "Ø": "O",
-    "Ŏ": "O",
-    "Ù": "U",
-    "Ú": "U",
-    "Û": "U",
-    "Ü": "U",
-    "Ū": "U",
-    "Ů": "U",
-    "Ű": "U",
-    "Ŭ": "U",
-    "Ũ": "U",
-    "Ų": "U",
-    "Ý": "Y",
-    "Ÿ": "Y",
-    "Ŷ": "Y",
-    "Ź": "Z",
-    "Ż": "Z",
-    "Ž": "Z",
-    "Æ": "AE",
-    "Ǽ": "AE",
-    "ß": "SS",
-    "à": "a",
-    "á": "a",
-    "â": "a",
-    "ã": "a",
-    "ä": "a",
-    "å": "a",
-    "ā": "a",
-    "ą": "a",
-    "ă": "a",
-    "ç": "c",
-    "ć": "c",
-    "č": "c",
-    "ĉ": "c",
-    "ċ": "c",
-    "è": "e",
-    "é": "e",
-    "ê": "e",
-    "ë": "e",
-    "ē": "e",
-    "ę": "e",
-    "ě": "e",
-    "ĕ": "e",
-    "ė": "e",
-    "ì": "i",
-    "í": "i",
-    "î": "i",
-    "ï": "i",
-    "ī": "i",
-    "ĩ": "i",
-    "ĭ": "i",
-    "į": "i",
-    "ı": "i",
-    "ñ": "n",
-    "ń": "n",
-    "ň": "n",
-    "ņ": "n",
-    "ŋ": "n",
-    "ò": "o",
-    "ó": "o",
-    "ô": "o",
-    "õ": "o",
-    "ö": "o",
-    "ō": "o",
-    "ő": "o",
-    "ø": "o",
-    "ŏ": "o",
-    "ù": "u",
-    "ú": "u",
-    "û": "u",
-    "ü": "u",
-    "ū": "u",
-    "ů": "u",
-    "ű": "u",
-    "ŭ": "u",
-    "ũ": "u",
-    "ų": "u",
-    "ý": "y",
-    "ÿ": "y",
-    "ŷ": "y",
-    "ź": "z",
-    "ż": "z",
-    "ž": "z",
-    "æ": "ae",
-    "ǽ": "ae",
-    "Thrust": "Thrst",
     "Squirt": "Sqr",
     "Bra": "Br",
     "Kiss": "Ks",
@@ -599,6 +473,7 @@
     "streaking": "strkng",
     "peeping tom": "ppng tm",
     "sexual abuse": "sxl bs",
+
     "consensual": "cnsns",
     "non-consensual": "ncnsns",
     "penetration": "pntrtn",
@@ -655,8 +530,140 @@
     "arousing": "rsng",
     "stimulating": "stmltng",
     "explicit": "xplct"
-            
-            // Add your replacements here
+            // ... other replacements
+        };
+
+        const specialCharacterReplacements = {
+            "À": "A",
+            "Á": "A",
+            "Â": "A",
+            "Ã": "A",
+            "Ä": "A",
+            "Å": "A",
+            "Ā": "A",
+            "Ą": "A",
+            "Ă": "A",
+            "Ç": "C",
+            "Ć": "C",
+            "Č": "C",
+            "Ĉ": "C",
+            "Ċ": "C",
+            "È": "E",
+            "É": "E",
+            "Ê": "E",
+            "Ë": "E",
+            "Ē": "E",
+            "Ę": "E",
+            "Ě": "E",
+            "Ĕ": "E",
+            "Ė": "E",
+            "Ì": "I",
+            "Í": "I",
+            "Î": "I",
+            "Ï": "I",
+            "Ī": "I",
+            "Ĩ": "I",
+            "Ĭ": "I",
+            "Į": "I",
+            "İ": "I",
+            "Ñ": "N",
+            "Ń": "N",
+            "Ň": "N",
+            "Ņ": "N",
+            "Ŋ": "N",
+            "Ò": "O",
+            "Ó": "O",
+            "Ô": "O",
+            "Õ": "O",
+            "Ö": "O",
+            "Ō": "O",
+            "Ő": "O",
+            "Ø": "O",
+            "Ŏ": "O",
+            "Ù": "U",
+            "Ú": "U",
+            "Û": "U",
+            "Ü": "U",
+            "Ū": "U",
+            "Ů": "U",
+            "Ű": "U",
+            "Ŭ": "U",
+            "Ũ": "U",
+            "Ų": "U",
+            "Ý": "Y",
+            "Ÿ": "Y",
+            "Ŷ": "Y",
+            "Ź": "Z",
+            "Ż": "Z",
+            "Ž": "Z",
+            "Æ": "AE",
+            "Ǽ": "AE",
+            "ß": "SS",
+            "à": "a",
+            "á": "a",
+            "â": "a",
+            "ã": "a",
+            "ä": "a",
+            "å": "a",
+            "ā": "a",
+            "ą": "a",
+            "ă": "a",
+            "ç": "c",
+            "ć": "c",
+            "č": "c",
+            "ĉ": "c",
+            "ċ": "c",
+            "è": "e",
+            "é": "e",
+            "ê": "e",
+            "ë": "e",
+            "ē": "e",
+            "ę": "e",
+            "ě": "e",
+            "ĕ": "e",
+            "ė": "e",
+            "ì": "i",
+            "í": "i",
+            "î": "i",
+            "ï": "i",
+            "ī": "i",
+            "ĩ": "i",
+            "ĭ": "i",
+            "į": "i",
+            "ı": "i",
+            "ñ": "n",
+            "ń": "n",
+            "ň": "n",
+            "ņ": "n",
+            "ŋ": "n",
+            "ò": "o",
+            "ó": "o",
+            "ô": "o",
+            "õ": "o",
+            "ö": "o",
+            "ō": "o",
+            "ő": "o",
+            "ø": "o",
+            "ŏ": "o",
+            "ù": "u",
+            "ú": "u",
+            "û": "u",
+            "ü": "u",
+            "ū": "u",
+            "ů": "u",
+            "ű": "u",
+            "ŭ": "u",
+            "ũ": "u",
+            "ų": "u",
+            "ý": "y",
+            "ÿ": "y",
+            "ŷ": "y",
+            "ź": "z",
+            "ż": "z",
+            "ž": "z",
+            "æ": "ae",
+            "ǽ": "ae",
+            // Add more special character replacements as needed
         };
 
         function processText(action) {
@@ -671,75 +678,81 @@
 
             let replacementsList = document.getElementById('replacementsList');
             replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
-            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + Object.keys(processedResult.changes).map(key => `<li>${key} -> ${replacements[key]}: <span>${processedResult.changes[key]}</span></li>`).join('') + `</ul>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + 
+                Object.keys(processedResult.changes).map(key => 
+                    `<li>${key} -> ${replacements[key]}: <span>${processedResult.changes[key]}</span></li>`
+                ).join('') + 
+            `</ul>`;
         }
 
-       function replaceWords(text) {
-    const replacedWords = [];
-    const changes = {};
-    let changesCount = 0;
+        function replaceSpecialCharacters() {
+            let inputText = document.getElementById('inputText').value;
+            let processedResult = replaceWords(inputText, specialCharacterReplacements);
 
-    // Split the text by word boundaries while preserving the formatting
-    const words = text.split(/(\s+|\b)/).map(word => {
-        let originalWord = word;
-        let modifiedWord = word;
+            processedResult.plainText = removeContinuousDots(processedResult.plainText);
+            processedResult.plainText = removeRepeatedWords(processedResult.plainText);
 
-        // Step 1: Replace special characters within words
-        for (let key in replacements) {
-            const regex = new RegExp(`${key}`, 'g'); // Match any occurrence of the special character
-            if (regex.test(modifiedWord)) {
-                const replacement = replacements[key];
-                modifiedWord = modifiedWord.replace(regex, replacement);
-            }
+            document.getElementById('outputText').innerHTML = processedResult.highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedResult.plainText;
+
+            let replacementsList = document.getElementById('replacementsList');
+            replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + 
+                Object.keys(processedResult.changes).map(key => 
+                    `<li>${key} -> ${specialCharacterReplacements[key]}: <span>${processedResult.changes[key]}</span></li>`
+                ).join('') + 
+            `</ul>`;
         }
 
-        // Step 2: Handle suffixes like ing, ed, etc.
-        for (let key in replacements) {
-            const regexWholeWord = new RegExp(`\\b${key}\\b`, 'gi');
-            const regexWithSuffix = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
-            if (regexWholeWord.test(modifiedWord) || regexWithSuffix.test(modifiedWord)) {
-                const replacement = replacements[key];
-                modifiedWord = modifiedWord.replace(regexWholeWord, replacement).replace(regexWithSuffix, replacement);
-            }
+        function replaceWords(text, replacementsDict = replacements) {
+            const changes = {};
+            let changesCount = 0;
+
+            const words = text.split(/(\b)/).map(word => {
+                let modifiedWord = word;
+
+                // Replace the word if it's a direct match in the dictionary
+                for (let key in replacementsDict) {
+                    const regexWholeWord = new RegExp(`\\b${key}\\b`, 'gi');
+                    const regexWithSuffix = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
+                    if (regexWholeWord.test(modifiedWord) || regexWithSuffix.test(modifiedWord)) {
+                        const replacement = replacementsDict[key];
+                        modifiedWord = modifiedWord.replace(regexWholeWord, replacement).replace(regexWithSuffix, replacement);
+
+                        // Track changes
+                        if (!changes[key]) {
+                            changes[key] = 0;
+                        }
+                        changes[key]++;
+                        changesCount++;
+                    }
+                }
+
+                return {
+                    highlighted: modifiedWord !== word ? `<span class="highlight">${modifiedWord}</span>` : word,
+                    plain: modifiedWord
+                };
+            });
+
+            return {
+                highlightedText: words.map(w => w.highlighted).join(''),
+                plainText: words.map(w => w.plain).join(''),
+                changes,
+                changesCount
+            };
         }
-
-        if (modifiedWord !== originalWord) {
-            const changeKey = originalWord.toLowerCase();
-            if (!changes[changeKey]) {
-                changes[changeKey] = 0;
-            }
-            changes[changeKey]++;
-            replacedWords.push(`${originalWord} -> ${modifiedWord}`);
-            changesCount++;
-        }
-
-        return {
-            highlighted: modifiedWord !== originalWord ? `<span class="highlight">${modifiedWord}</span>` : originalWord,
-            plain: modifiedWord
-        };
-    });
-
-    // Join the text back together while preserving original formatting
-    return {
-        highlightedText: words.map(w => w.highlighted).join(''),
-        plainText: words.map(w => w.plain).join(''),
-        replacedWords,
-        changes,
-        changesCount
-    };
-}
 
         function deleteWords(text) {
             const changes = {};
             let changesCount = 0;
 
-            const words = text.split(/\b/).map(word => {
+            const words = text.split(/(\b)/).map(word => {
                 let strippedWord = word.replace(/[^a-zA-Z]/g, '');
                 let lowerStrippedWord = strippedWord.toLowerCase();
 
                 for (let key in replacements) {
                     const regex = new RegExp(`\\b${key}\\b`, 'gi');
-                    const regexEd = new RegExp(`\\b${key}(ed|ing)\\b`, 'gi');
+                    const regexEd = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
                     if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
                         if (!changes[key]) {
                             changes[key] = 0;
