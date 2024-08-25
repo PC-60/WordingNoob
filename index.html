@@ -106,7 +106,6 @@
     </div>
     <script>
         const replacements = {
-            // Add your regular word replacements here
             "lust": "affection",
             "hard": "strong",
             "lust": "affection",
@@ -530,7 +529,7 @@
     "arousing": "rsng",
     "stimulating": "stmltng",
     "explicit": "xplct"
-            // ... other replacements
+            // Add more single-word and multi-word phrase replacements here
         };
 
         const specialCharacterReplacements = {
@@ -630,7 +629,7 @@
             "ĩ": "i",
             "ĭ": "i",
             "į": "i",
-            "ı": "i",
+            
             "ñ": "n",
             "ń": "n",
             "ň": "n",
@@ -663,7 +662,7 @@
             "ž": "z",
             "æ": "ae",
             "ǽ": "ae"
-            // Add more special character replacements as needed
+            // Add more special character replacements here
         };
 
         function processText(action) {
@@ -687,7 +686,7 @@
 
         function replaceSpecialCharacters() {
             let inputText = document.getElementById('inputText').value;
-            let processedResult = replaceWords(inputText, specialCharacterReplacements);
+            let processedResult = replaceWords(inputText, specialCharacterReplacements, false);
 
             processedResult.plainText = removeContinuousDots(processedResult.plainText);
             processedResult.plainText = removeRepeatedWords(processedResult.plainText);
@@ -704,39 +703,31 @@
             `</ul>`;
         }
 
-        function replaceWords(text, replacementsDict = replacements) {
+        function replaceWords(text, replacementsDict = replacements, useWordBoundary = true) {
             const changes = {};
             let changesCount = 0;
 
-            const words = text.split(/(\b)/).map(word => {
-                let modifiedWord = word;
+            // Sort keys by length to ensure multi-word phrases are replaced first
+            const keys = Object.keys(replacementsDict).sort((a, b) => b.length - a.length);
 
-                // Replace the word if it's a direct match in the dictionary
-                for (let key in replacementsDict) {
-                    const regexWholeWord = new RegExp(`\\b${key}\\b`, 'gi');
-                    const regexWithSuffix = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
-                    if (regexWholeWord.test(modifiedWord) || regexWithSuffix.test(modifiedWord)) {
+            keys.forEach(key => {
+                const regex = useWordBoundary ? new RegExp(`\\b${key}\\b`, 'gi') : new RegExp(key, 'gi');
+                if (regex.test(text)) {
+                    text = text.replace(regex, match => {
                         const replacement = replacementsDict[key];
-                        modifiedWord = modifiedWord.replace(regexWholeWord, replacement).replace(regexWithSuffix, replacement);
-
-                        // Track changes
                         if (!changes[key]) {
                             changes[key] = 0;
                         }
                         changes[key]++;
                         changesCount++;
-                    }
+                        return `<span class="highlight">${replacement}</span>`;
+                    });
                 }
-
-                return {
-                    highlighted: modifiedWord !== word ? `<span class="highlight">${modifiedWord}</span>` : word,
-                    plain: modifiedWord
-                };
             });
 
             return {
-                highlightedText: words.map(w => w.highlighted).join(''),
-                plainText: words.map(w => w.plain).join(''),
+                highlightedText: text,
+                plainText: text.replace(/<span class="highlight">|<\/span>/g, ''),
                 changes,
                 changesCount
             };
@@ -746,7 +737,7 @@
             const changes = {};
             let changesCount = 0;
 
-            const words = text.split(/(\b)/).map(word => {
+            const words = text.split(/(\s+)/).map(word => {
                 let strippedWord = word.replace(/[^a-zA-Z]/g, '');
                 let lowerStrippedWord = strippedWord.toLowerCase();
 
@@ -759,18 +750,15 @@
                         }
                         changes[key]++;
                         changesCount++;
-                        return {
-                            highlighted: '',
-                            plain: ''
-                        };
+                        return '';
                     }
                 }
-                return { highlighted: word, plain: word };
+                return word;
             });
 
             return {
-                highlightedText: words.map(w => w.highlighted).join(''),
-                plainText: words.map(w => w.plain).join(''),
+                highlightedText: words.join(''),
+                plainText: words.join(''),
                 changes,
                 changesCount
             };
