@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Processor</title>
+    <title>Text Processor and Splitter</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,7 +55,7 @@
             flex-direction: column;
             align-items: center;
         }
-        .output-section .output-text {
+        .output-section .output-text, .split-text {
             width: 100%;
             height: 150px;
             margin-bottom: 20px;
@@ -89,6 +89,11 @@
             border-radius: 3px;
             margin-left: 10px;
         }
+        .output-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -98,878 +103,885 @@
         <button onclick="processText('replace')">Replace Words</button>
         <button onclick="processText('delete')">Delete Words</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
+        <button onclick="splitText()">Split Text</button> <!-- New button for text splitting -->
         <div class="output-section">
             <div id="outputText" class="output-text"></div>
             <button onclick="copyOutput()">Copy to Clipboard</button>
             <div id="replacementsList"></div>
+            <div id="outputContainer"></div> <!-- Container to show split text -->
         </div>
     </div>
     <script>
-        const replacements = {"lust": "affection", 
+        // Existing text processing script
+        const replacements = {
+             // Add your replacements here 
 
-        "hard": "strong", 
+"hard": "strong", 
 
-        "beautiful": "appealing", 
+"beautiful": "appealing", 
 
-        "breasts": "mellons", 
+"breasts": "mellons", 
 
-        "nipples": "kneeples", 
+"nipples": "kneeples", 
 
-        "penis": "pp", 
+"penis": "pp", 
 
-        "vagina": "kitty", 
+"vagina": "kitty", 
 
-        "thrust": "move", 
+"thrust": "move", 
 
-        "kiss": "embrace", 
+"kiss": "embrace", 
 
-        "moan": "sigh", 
+"moan": "sigh", 
 
-        "pant": "breathe", 
+"pant": "breathe", 
 
-        "climax": "peak", 
+"climax": "peak", 
 
-        "orgasm": "joy", 
+"orgasm": "joy", 
 
-        "sex": "love", 
-                              "Orgy" : "orgg" ,
+"sex": "love", 
+                      "Orgy" : "orgg" ,
 
-        "make love": "connect", 
+"make love": "connect", 
 
-        "erotic": "intimate", 
+"erotic": "intimate", 
 
-        "seduce": "charm", 
+"seduce": "charm", 
 
-        "desire": "longing", 
+"desire": "longing", 
 
-        "fantasize": "dream", 
+"fantasize": "dream", 
 
-        "seduction": "charm", 
+"seduction": "charm", 
 
-        "libido": "energy", 
+"libido": "energy", 
 
-        "arousal": "excitement", 
-                              "cunt" : "cnt" ,
+"arousal": "excitement", 
+                      "cunt" : "cnt" ,
 
-        "ecstasy": "joy", 
-                              "Fuckin" : "f in" ,
+"ecstasy": "joy", 
+                      "Fuckin" : "f in" ,
 "Fuckwad" : "f wad" ,
 
-            "sex": "sec", 
-                              "Dicks" : "pp" ,
+    "sex": "sec", 
+                      "Dicks" : "pp" ,
 "Fucked" : "f" ,
 "Fucks" : "f" ,
 
-            "fuck": "f", 
+    "fuck": "f", 
 
-            "breast": "melons", 
+    "breast": "melons", 
 
-            "penis": "pp", 
+    "penis": "pp", 
 
-            "vagina": "pp", 
+    "vagina": "pp", 
 
-            "dick": "pp",
-            "Dicking" : "ding",
-           "Motherfucker" : "mothaf",
-           "Cocksuckers" : "csuckers",
+    "dick": "pp",
+    "Dicking" : "ding",
+   "Motherfucker" : "mothaf",
+   "Cocksuckers" : "csuckers",
 
-            "cock": "pp", 
+    "cock": "pp", 
 
-            "pussy": "pp", 
+    "pussy": "pp", 
 
-            "balls": "ball", 
+    "balls": "ball", 
 
-            "bitch": "beach", 
+    "bitch": "beach", 
 
-            "Bitches": "beaches", 
+    "Bitches": "beaches", 
 
-             "Booty": "butt", 
+     "Booty": "butt", 
 
-    "nipple": "mellons", 
+"nipple": "mellons", 
 
-    "boob": "mellons", 
+"boob": "mellons", 
 
-    "tit": "mellons", 
+"tit": "mellons", 
 
-    "virgin": "version", 
+"virgin": "version", 
 
-    "fucking": "f", 
-            "Fucker" : "f er",
+"fucking": "f", 
+    "Fucker" : "f er",
 "Fuckers" : "f ers",
 
-    "Naruto": "Nahrootoh", 
+"Naruto": "Nahrootoh", 
 
-    "Uzumaki": "Uhzumaaki", 
+"Uzumaki": "Uhzumaaki", 
 
-    "Sasuke": "sahskay", 
+"Sasuke": "sahskay", 
 
-    "Uchiha": "uhchiha", 
+"Uchiha": "uhchiha", 
 
-    "Hokage": "hohkahgay", 
+"Hokage": "hohkahgay", 
 
-    "Shinobi": "shinohbee", 
+"Shinobi": "shinohbee", 
 
-    "Squirt": "Sqr", 
+"Squirt": "Sqr", 
 
-    "Bra": "Br", 
+"Bra": "Br", 
 
-    "Kiss": "Ks", 
+"Kiss": "Ks", 
 
-    "Pound": "Pnd", 
+"Pound": "Pnd", 
 
-    "Sakura": "Sahkoruh", 
+"Sakura": "Sahkoruh", 
 
-    "Tsunade": "tsoonahday", 
+"Tsunade": "tsoonahday", 
 
-    "Jiraiya": "Jereyeah", 
+"Jiraiya": "Jereyeah", 
 
-    "kage": "kahgay", 
+"kage": "kahgay", 
 
-    "Kyubi": "kyubee", 
+"Kyubi": "kyubee", 
 
-    "Hatake": "hathakay", 
+"Hatake": "hathakay", 
 
-    "Sharingan": "Shaaringan", 
+"Sharingan": "Shaaringan", 
 
-    "Obito": "ohbeetoh", 
+"Obito": "ohbeetoh", 
 
-    "Mangekyou": "Mangaykyu", 
+"Mangekyou": "Mangaykyu", 
 
-    "fucked": "f", 
+"fucked": "f", 
 
-    "cum": "come", 
+"cum": "come", 
 
-    "ass": "butt", 
+"ass": "butt", 
 
-    "asshole": "butt", 
+"asshole": "butt", 
 
-    "moan": "mmmm", 
+"moan": "mmmm", 
 
-    "shaft": " ", 
+"shaft": " ", 
 
-    "stroke": "slide ", 
+"stroke": "slide ", 
 
-    "lick": "lik", 
+"lick": "lik", 
 
-    "suck": "sck", 
+"suck": "sck", 
 
-    "lust": "lusssst", 
+"lust": "lusssst", 
 
-    "slut": "slot", 
+"slut": "slot", 
 
-    "blood": "bld", 
+"blood": "bld", 
 
-    "whore": "whr", 
+"whore": "whr", 
 
-    "porn": "pawn", 
+"porn": "pawn", 
 
-    "rape": "rpe", 
+"rape": "rpe", 
 
-    "fag": "fg", 
+"fag": "fg", 
 
-    "faggot": "fgot", 
+"faggot": "fgot", 
 
-    "retard": "retd", 
+"retard": "retd", 
 
-    "spic": "spk", 
+"spic": "spk", 
 
-    "coon": "cn", 
+"coon": "cn", 
 
-    "chink": "chk", 
+"chink": "chk", 
 
-    "nigger": "ngr", 
+"nigger": "ngr", 
 
-    "nigga": "nga", 
+"nigga": "nga", 
 
-    "dyke": "dyk", 
+"dyke": "dyk", 
 
-    "kike": "kk", 
+"kike": "kk", 
 
-    "tranny": "trny", 
+"tranny": "trny", 
 
-    "homo": "hmo", 
+"homo": "hmo", 
 
-    "queer": "qer", 
+"queer": "qer", 
 
-    "gook": "gk", 
+"gook": "gk", 
 
-    "bastard": "bstrd", 
+"bastard": "bstrd", 
 
-    "damn": "dmn", 
+"damn": "dmn", 
 
-    "shit": "sht", 
+"shit": "sht", 
 
-    "crap": "crp", 
+"crap": "crp", 
 
-    "piss": "pss", 
+"piss": "pss", 
 
-    "douche": "dche", 
+"douche": "dche", 
 
-    "anal": "anl", 
+"anal": "anl", 
 
-    "oral": "orl", 
+"oral": "orl", 
 
-    "blowjob": "blwjb", 
+"blowjob": "blwjb", 
 
-    "handjob": "hndjb", 
+"handjob": "hndjb", 
 
-    "milf": "mlf", 
+"milf": "mlf", 
 
-    "twink": "twk", 
+"twink": "twk", 
 
-    "twinkie": "twke", 
+"twinkie": "twke", 
 
-    "orgasm": "orgsm", 
+"orgasm": "orgsm", 
 
-    "masturbate": "mstrbte", 
+"masturbate": "mstrbte", 
 
-    "masturbation": "mstrbtn", 
+"masturbation": "mstrbtn", 
 
-    "ejaculate": "ejclte", 
+"ejaculate": "ejclte", 
 
-    "ejaculation": "ejcltn", 
+"ejaculation": "ejcltn", 
 
-    "clit": "clt", 
+"clit": "clt", 
 
-    "clitoris": "cltros", 
+"clitoris": "cltros", 
 
-    "gonads": "gnds", 
+"gonads": "gnds", 
 
-    "pubic": "pbic", 
+"pubic": "pbic", 
 
-    "genital": "gntl", 
+"genital": "gntl", 
 
-    "genitals": "gntls", 
+"genitals": "gntls", 
 
-    "fetish": "ftish", 
+"fetish": "ftish", 
 
-    "bondage": "bndge", 
+"bondage": "bndge", 
 
-    "dominatrix": "dmntrx", 
+"dominatrix": "dmntrx", 
 
-    "sodomize": "sdmze", 
+"sodomize": "sdmze", 
 
-    "sodomy": "sdmy", 
+"sodomy": "sdmy", 
 
-    "whorehouse": "whrehse", 
+"whorehouse": "whrehse", 
 
-    "whoremonger": "whremngr", 
+"whoremonger": "whremngr", 
 
-    "incest": "incst", 
+"incest": "incst", 
 
-    "necrophilia": "ncrphlia", 
+"necrophilia": "ncrphlia", 
 
-    "bestiality": "bstlty", 
+"bestiality": "bstlty", 
 
-    "beastiality": "bstlty", 
+"beastiality": "bstlty", 
 
-    "pedophile": "pdphle", 
+"pedophile": "pdphle", 
 
-    "pedophilia": "pdphlia", 
+"pedophilia": "pdphlia", 
 
-    "zoophilia": "zphlia", 
+"zoophilia": "zphlia", 
 
-    "child porn": "chld prn", 
+"child porn": "chld prn", 
 
-    "child pornography": "chld prngrphy", 
+"child pornography": "chld prngrphy", 
 
-    "hentai": "hntai", 
+"hentai": "hntai", 
 
-    "titty": "ttty", 
+"titty": "ttty", 
 
-    "titties": "tties", 
+"titties": "tties", 
 
-    "boner": "bner", 
+"boner": "bner", 
 
-    "hard on": "hrd on", 
+"hard on": "hrd on", 
 
-    "nude": "nde", 
+"nude": "nde", 
 
-    "nudity": "ndty", 
+"nudity": "ndty", 
 
-    "orgy": "orgy", 
+"orgy": "orgy", 
 
-    "gangbang": "gngbng", 
+"gangbang": "gngbng", 
 
-    "gang bang": "gng bng", 
+"gang bang": "gng bng", 
 
-    "bukkake": "bkkke", 
+"bukkake": "bkkke", 
 
-    "bukakke": "bkkke", 
+"bukakke": "bkkke", 
 
-    "vulva": "vlva", 
+"vulva": "vlva", 
 
-    "vulvas": "vlvas", 
+"vulvas": "vlvas", 
 
-    "labia": "lbia", 
+"labia": "lbia", 
 
-    "labiaplasty": "lbplsty", 
+"labiaplasty": "lbplsty", 
 
-    "penectomy": "pnctmy", 
+"penectomy": "pnctmy", 
 
-    "penoplasty": "pnplsty", 
+"penoplasty": "pnplsty", 
 
-    "scrotum": "scrtm", 
+"scrotum": "scrtm", 
 
-    "testicle": "tstcl", 
+"testicle": "tstcl", 
 
-    "testicles": "tstcls", 
+"testicles": "tstcls", 
 
-    "foreskin": "frskn", 
+"foreskin": "frskn", 
 
-    "smegma": "smgma", 
+"smegma": "smgma", 
 
-    "menstruate": "mnstrte", 
+"menstruate": "mnstrte", 
 
-    "menstruation": "mnstrtn", 
+"menstruation": "mnstrtn", 
 
-    "period": "prd", 
+"period": "prd", 
 
-    "ovulate": "ovlte", 
+"ovulate": "ovlte", 
 
-    "ovulation": "ovltn", 
+"ovulation": "ovltn", 
 
-    "uterus": "utrs", 
+"uterus": "utrs", 
 
-    "cervix": "crvx", 
+"cervix": "crvx", 
 
-    "cervical": "crvcl", 
+"cervical": "crvcl", 
 
-    "endometrium": "ndmtrm", 
+"endometrium": "ndmtrm", 
 
-    "fallopian": "fllpn", 
+"fallopian": "fllpn", 
 
-    "fallopian tube": "fllpn tbe", 
+"fallopian tube": "fllpn tbe", 
 
-    "ovary": "ovry", 
+"ovary": "ovry", 
 
-    "ovaries": "ovries", 
+"ovaries": "ovries", 
 
-    "puberty": "pbrty", 
+"puberty": "pbrty", 
 
-    "pubes": "pbz", 
+"pubes": "pbz", 
 
-    "pubic hair": "pbic hr", 
+"pubic hair": "pbic hr", 
 
-    "erect": "erct", 
+"erect": "erct", 
 
-    "erection": "erctn", 
+"erection": "erctn", 
 
-    "conception": "cncptn", 
+"conception": "cncptn", 
 
-    "contraception": "cntrcptn", 
+"contraception": "cntrcptn", 
 
-    "contraceptive": "cntrcptv", 
+"contraceptive": "cntrcptv", 
 
-    "birth control": "brth cntrl", 
+"birth control": "brth cntrl", 
 
-    "abortion": "abtn", 
+"abortion": "abtn", 
 
-    "miscarriage": "mscrge", 
+"miscarriage": "mscrge", 
 
-    "pregnant": "prgnnt", 
+"pregnant": "prgnnt", 
 
-    "pregnancy": "prgnncy", 
+"pregnancy": "prgnncy", 
 
-    "fetus": "fts", 
+"fetus": "fts", 
 
-    "fetuses": "fts", 
-
-            "testes": "tsts", 
-
-    "semen": "smn", 
-
-    "testosterone": "tstrn", 
-
-    "estrogen": "estrgn", 
-
-    "progesterone": "prgstrn", 
-
-    "puberty": "pbrty", 
-
-    "pubescent": "pbscnt", 
-
-    "erectile": "erctl", 
-
-    "dysfunction": "dsfnctn", 
-
-    "gonorrhea": "gnrrha", 
-
-    "syphilis": "syphls", 
-
-    "herpes": "hrps", 
-
-    "chlamydia": "chlmda", 
-
-    "hepatitis": "hptts", 
-
-    "STD": "std", 
-
-    "STI": "sti", 
-
-    "contraception": "cntrcptn", 
-
-    "contraceptive": "cntrcptv", 
-
-    "hormone": "hrmne", 
-
-    "menstrual": "mnstrl", 
-
-    "cycle": "cycl", 
-
-    "ovulation": "ovltn", 
-
-    "ovary": "ovry", 
-
-    "fertility": "frtlty", 
-
-    "infertility": "nfrtlty", 
-
-    "insemination": "nsmmtn", 
-
-    "conception": "cncptn", 
-
-    "pregnancy": "prgnncy", 
-
-    "gestation": "gsttn", 
-
-    "embryo": "mbyo", 
-
-    "fetus": "fts", 
-
-    "placenta": "plcnt", 
-
-    "amniotic": "mntc", 
-
-    "birth": "brth", 
-
-    "labor": "lbr", 
-
-    "delivery": "dlvry", 
-
-    "postpartum": "pstprtm", 
-
-    "lactation": "lcttn", 
-
-    "nursing": "nrsng", 
-
-    "midwife": "mdwf", 
-
-    "obstetrician": "bsttrcn", 
-
-    "gynecologist": "gynclgst", 
-
-    "ultrasound": "ltrsnd", 
-
-    "mammogram": "mmgrm", 
-
-    "breastfeed": "brstfd", 
-
-    "breastfeeding": "brstfdng", 
-
-    "colostrum": "clstrm", 
-
-    "mastitis": "mstts", 
-
-    "nipple": "npl", 
-
-    "breast": "brst", 
-
-    "menopause": "mnpse", 
-
-    "andropause": "ndrps", 
-
-    "hysterectomy": "hstrctmy", 
-
-    "vasectomy": "vsctmy", 
-
-    "prostate": "prstt", 
-
-    "scrotum": "scrtm", 
-
-    "testicle": "tstcl", 
+"fetuses": "fts", 
 
     "testes": "tsts", 
 
-    "sperm": "sprm", 
+"semen": "smn", 
 
-    "semen": "smn", 
+"testosterone": "tstrn", 
 
-    "ovum": "ovm", 
+"estrogen": "estrgn", 
 
-    "ova": "ova", 
+"progesterone": "prgstrn", 
 
-    "zygote": "zygt", 
+"puberty": "pbrty", 
 
-    "embryo": "mbyo", 
+"pubescent": "pbscnt", 
 
-    "blastocyst": "blstcyst", 
+"erectile": "erctl", 
 
-    "fallopian": "fllpn", 
+"dysfunction": "dsfnctn", 
 
-    "cervix": "crvx", 
+"gonorrhea": "gnrrha", 
 
-    "uterus": "utrs", 
+"syphilis": "syphls", 
 
-    "vagina": "vgna", 
+"herpes": "hrps", 
 
-    "labia": "lbia", 
+"chlamydia": "chlmda", 
 
-    "clitoris": "cltrs", 
+"hepatitis": "hptts", 
 
-    "perineum": "prnm", 
+"STD": "std", 
 
-    "episiotomy": "psitmy", 
+"STI": "sti", 
 
-    "menstruate": "mnstrt", 
+"contraception": "cntrcptn", 
 
-    "menstruation": "mnstrtn", 
+"contraceptive": "cntrcptv", 
 
-    "period": "prd", 
+"hormone": "hrmne", 
 
-    "ovulate": "ovlt", 
+"menstrual": "mnstrl", 
 
-    "ovulation": "ovltn", 
+"cycle": "cycl", 
 
-    "contraception": "cntrcptn", 
+"ovulation": "ovltn", 
 
-    "contraceptive": "cntrcptv", 
+"ovary": "ovry", 
 
-    "infertility": "nfrtlty", 
+"fertility": "frtlty", 
 
-    "insemination": "nsmmtn", 
+"infertility": "nfrtlty", 
 
-    "gestation": "gsttn", 
+"insemination": "nsmmtn", 
 
-    "placenta": "plcnt", 
+"conception": "cncptn", 
 
-    "amniotic": "mntc", 
+"pregnancy": "prgnncy", 
 
-    "delivery": "dlvry", 
+"gestation": "gsttn", 
 
-    "postpartum": "pstprtm", 
+"embryo": "mbyo", 
 
-    "lactation": "lcttn", 
+"fetus": "fts", 
 
-    "obstetrician": "bsttrcn", 
+"placenta": "plcnt", 
 
-    "gynecologist": "gynclgst", 
+"amniotic": "mntc", 
 
-    "ultrasound": "ltrsnd", 
+"birth": "brth", 
 
-    "mammogram": "mmgrm", 
+"labor": "lbr", 
 
-    "breastfeed": "brstfd", 
+"delivery": "dlvry", 
 
-    "menopause": "mnpse", 
+"postpartum": "pstprtm", 
 
-    "andropause": "ndrps", 
+"lactation": "lcttn", 
 
-    "hysterectomy": "hstrctmy", 
+"nursing": "nrsng", 
 
-    "vasectomy": "vsctmy", 
+"midwife": "mdwf", 
 
-    "prostate": "prstt", 
+"obstetrician": "bsttrcn", 
 
-             "adultery": "adlt", 
+"gynecologist": "gynclgst", 
 
-    "fornication": "frnctn", 
+"ultrasound": "ltrsnd", 
 
-    "sodomy": "sdmy", 
+"mammogram": "mmgrm", 
 
-    "voyeur": "vyr", 
+"breastfeed": "brstfd", 
 
-    "voyeurism": "vyrsm", 
+"breastfeeding": "brstfdng", 
 
-    "aphrodisiac": "phrds", 
+"colostrum": "clstrm", 
 
-    "brothel": "brthl", 
+"mastitis": "mstts", 
 
-    "stripper": "strpr", 
+"nipple": "npl", 
 
-    "strip club": "strp clb", 
+"breast": "brst", 
 
-    "prostitution": "prsttn", 
+"menopause": "mnpse", 
 
-    "escort": "scrt", 
+"andropause": "ndrps", 
 
-    "gigolo": "ggl", 
+"hysterectomy": "hstrctmy", 
 
-    "hooker": "hkr", 
+"vasectomy": "vsctmy", 
 
-    "madam": "mdm", 
+"prostate": "prstt", 
 
-    "pimp": "pmp", 
+"scrotum": "scrtm", 
 
-    "sugar daddy": "sgr ddy", 
+"testicle": "tstcl", 
 
-    "sugar baby": "sgr bby", 
+"testes": "tsts", 
 
-    "john": "jhn", 
+"sperm": "sprm", 
 
-    "mistress": "mstrs", 
+"semen": "smn", 
 
-    "courtesan": "crtsn", 
+"ovum": "ovm", 
 
-    "concubine": "cncbn", 
+"ova": "ova", 
 
-    "harem": "hrm", 
+"zygote": "zygt", 
 
-    "love hotel": "lv htl", 
+"embryo": "mbyo", 
 
-    "orgasm": "orgsm", 
+"blastocyst": "blstcyst", 
 
-    "climax": "clmx", 
+"fallopian": "fllpn", 
 
-    "arousal": "arlsl", 
+"cervix": "crvx", 
 
-    "foreplay": "frply", 
+"uterus": "utrs", 
 
-    "intimate": "ntmt", 
+"vagina": "vgna", 
 
-    "seduce": "sduc", 
+"labia": "lbia", 
 
-    "seduction": "sductn", 
+"clitoris": "cltrs", 
 
-    "sensual": "snsl", 
+"perineum": "prnm", 
 
-    "sexual": "sxl", 
+"episiotomy": "psitmy", 
 
-    "sexually": "sxly", 
+"menstruate": "mnstrt", 
 
-    "explicit": "xplct", 
+"menstruation": "mnstrtn", 
 
-    "erotic": "rtic", 
+"period": "prd", 
 
-    "erotica": "rtca", 
+"ovulate": "ovlt", 
 
-    "arouse": "ars", 
+"ovulation": "ovltn", 
 
-    "stimulate": "stmlt", 
+"contraception": "cntrcptn", 
 
-    "stimulation": "stmltn", 
+"contraceptive": "cntrcptv", 
 
-    "titillate": "ttllt", 
+"infertility": "nfrtlty", 
 
-    "titillation": "ttlltn", 
+"insemination": "nsmmtn", 
 
-    "tantric": "tntrc", 
+"gestation": "gsttn", 
 
-    "kama sutra": "km str", 
+"placenta": "plcnt", 
 
-    "aphrodisiac": "phrds", 
+"amniotic": "mntc", 
 
-    "fetish": "ftsh", 
+"delivery": "dlvry", 
 
-    "kink": "knk", 
+"postpartum": "pstprtm", 
 
-    "kinky": "knky", 
+"lactation": "lcttn", 
 
-    "masochist": "mscst", 
+"obstetrician": "bsttrcn", 
 
-    "masochism": "mscsm", 
+"gynecologist": "gynclgst", 
 
-    "sadist": "sdst", 
+"ultrasound": "ltrsnd", 
 
-    "sadism": "sdsm", 
+"mammogram": "mmgrm", 
 
-    "sadomasochism": "sdmscs", 
+"breastfeed": "brstfd", 
 
-    "dominance": "dmnce", 
+"menopause": "mnpse", 
 
-    "submission": "sbmsn", 
+"andropause": "ndrps", 
 
-    "dominatrix": "dmntrx", 
+"hysterectomy": "hstrctmy", 
 
-    "submissive": "sbmssv", 
+"vasectomy": "vsctmy", 
 
-    "switch": "swch", 
+"prostate": "prstt", 
 
-    "bdsm": "bdsm", 
+     "adultery": "adlt", 
 
-    "bondage": "bndge", 
+"fornication": "frnctn", 
 
-    "discipline": "dspln", 
+"sodomy": "sdmy", 
 
-    "dominance": "dmnce", 
+"voyeur": "vyr", 
 
-    "submission": "sbmsn", 
+"voyeurism": "vyrsm", 
 
-    "sadomasochism": "sdmscs", 
+"aphrodisiac": "phrds", 
 
-    "voyeur": "vyr", 
+"brothel": "brthl", 
 
-    "exhibitionism": "xhbtnsm", 
+"stripper": "strpr", 
 
-    "exhibitionist": "xhbtnst", 
+"strip club": "strp clb", 
 
-    "incestuous": "ncsts", 
+"prostitution": "prsttn", 
 
-    "incest": "ncst", 
+"escort": "scrt", 
 
-    "pedophile": "pdphle", 
+"gigolo": "ggl", 
 
-    "pedophilia": "pdphlia", 
+"hooker": "hkr", 
 
-    "hebophilia": "hbp", 
+"madam": "mdm", 
 
-    "paraphilia": "prphl", 
+"pimp": "pmp", 
 
-    "necrophilia": "ncrphl", 
+"sugar daddy": "sgr ddy", 
 
-    "bestiality": "bstlty", 
+"sugar baby": "sgr bby", 
 
-    "zoophilia": "zphl", 
+"john": "jhn", 
 
-    "child molestation": "chld mlsttn", 
+"mistress": "mstrs", 
 
-    "molester": "mlstr", 
+"courtesan": "crtsn", 
 
-    "rape": "rpe", 
+"concubine": "cncbn", 
 
-    "rapist": "rpst", 
+"harem": "hrm", 
 
-    "sexual assault": "sxl slt", 
+"love hotel": "lv htl", 
 
-    "sexual harassment": "sxl hrssmnt", 
+"orgasm": "orgsm", 
 
-    "groping": "grpng", 
+"climax": "clmx", 
 
-    "fondling": "fndlng", 
+"arousal": "arlsl", 
 
-    "indecent exposure": "ndcnt xpsr", 
+"foreplay": "frply", 
 
-    "streaking": "strkng", 
+"intimate": "ntmt", 
 
-    "peeping tom": "ppng tm", 
+"seduce": "sduc", 
 
-    "sexual abuse": "sxl bs", 
+"seduction": "sductn", 
 
-  
+"sensual": "snsl", 
 
-    "consensual": "cnsns", 
+"sexual": "sxl", 
 
-    "non-consensual": "ncnsns", 
+"sexually": "sxly", 
 
-    "penetration": "pntrtn", 
+"explicit": "xplct", 
 
-    "intercourse": "ntrcrs", 
+"erotic": "rtic", 
 
-    "coitus": "cts", 
+"erotica": "rtca", 
 
-    "cunnilingus": "cnlngs", 
+"arouse": "ars", 
 
-    "fellatio": "fllt", 
+"stimulate": "stmlt", 
 
-    "anilingus": "nlg", 
+"stimulation": "stmltn", 
 
-    "autofellatio": "tfltl", 
+"titillate": "ttllt", 
 
-    "tribadism": "trbsm", 
+"titillation": "ttlltn", 
 
-    "tribbing": "trbbng", 
+"tantric": "tntrc", 
 
-    "scissoring": "scssrng", 
+"kama sutra": "km str", 
 
-    "fisting": "fstng", 
+"aphrodisiac": "phrds", 
 
-    "mutual masturbation": "mtl mstrbtn", 
+"fetish": "ftsh", 
 
-    "swinging": "swngng", 
+"kink": "knk", 
 
-    "threesome": "thrsm", 
+"kinky": "knky", 
 
-    "foursome": "fursm", 
+"masochist": "mscst", 
 
-    "orgy": "orgy", 
+"masochism": "mscsm", 
 
-    "gangbang": "gngbng", 
+"sadist": "sdst", 
 
-    "group sex": "grp sx", 
+"sadism": "sdsm", 
 
-    "bukakke": "bkk", 
+"sadomasochism": "sdmscs", 
 
-    "bukkake": "bkk", 
+"dominance": "dmnce", 
 
-    "dildo": "dld", 
+"submission": "sbmsn", 
 
-    "vibrator": "vbrtr", 
+"dominatrix": "dmntrx", 
 
-    "butt plug": "btt plg", 
+"submissive": "sbmssv", 
 
-    "anal beads": "nl bds", 
+"switch": "swch", 
 
-    "handcuffs": "hndcffs", 
+"bdsm": "bdsm", 
 
-    "whip": "whp", 
+"bondage": "bndge", 
 
-    "crop": "crp", 
+"discipline": "dspln", 
 
-    "gag": "gg", 
+"dominance": "dmnce", 
 
-    "blindfold": "blndfld", 
+"submission": "sbmsn", 
 
-    "ball gag": "bll gg", 
+"sadomasochism": "sdmscs", 
 
-    "harness": "hrnss", 
+"voyeur": "vyr", 
 
-    "chastity belt": "chstty blt", 
+"exhibitionism": "xhbtnsm", 
 
-    "bondage gear": "bndg gr", 
+"exhibitionist": "xhbtnst", 
 
-    "leather": "lthr", 
+"incestuous": "ncsts", 
 
-    "latex": "ltx", 
+"incest": "ncst", 
 
-    "rubber": "rbb", 
+"pedophile": "pdphle", 
 
-    "dominant": "dmnt", 
+"pedophilia": "pdphlia", 
 
-    "submissive": "sbmssv", 
+"hebophilia": "hbp", 
 
-    "switch": "swch", 
-                              "tits" : "tips" ,
+"paraphilia": "prphl", 
+
+"necrophilia": "ncrphl", 
+
+"bestiality": "bstlty", 
+
+"zoophilia": "zphl", 
+
+"child molestation": "chld mlsttn", 
+
+"molester": "mlstr", 
+
+"rape": "rpe", 
+
+"rapist": "rpst", 
+
+"sexual assault": "sxl slt", 
+
+"sexual harassment": "sxl hrssmnt", 
+
+"groping": "grpng", 
+
+"fondling": "fndlng", 
+
+"indecent exposure": "ndcnt xpsr", 
+
+"streaking": "strkng", 
+
+"peeping tom": "ppng tm", 
+
+"sexual abuse": "sxl bs", 
+
+
+
+"consensual": "cnsns", 
+
+"non-consensual": "ncnsns", 
+
+"penetration": "pntrtn", 
+
+"intercourse": "ntrcrs", 
+
+"coitus": "cts", 
+
+"cunnilingus": "cnlngs", 
+
+"fellatio": "fllt", 
+
+"anilingus": "nlg", 
+
+"autofellatio": "tfltl", 
+
+"tribadism": "trbsm", 
+
+"tribbing": "trbbng", 
+
+"scissoring": "scssrng", 
+
+"fisting": "fstng", 
+
+"mutual masturbation": "mtl mstrbtn", 
+
+"swinging": "swngng", 
+
+"threesome": "thrsm", 
+
+"foursome": "fursm", 
+
+"orgy": "orgy", 
+
+"gangbang": "gngbng", 
+
+"group sex": "grp sx", 
+
+"bukakke": "bkk", 
+
+"bukkake": "bkk", 
+
+"dildo": "dld", 
+
+"vibrator": "vbrtr", 
+
+"butt plug": "btt plg", 
+
+"anal beads": "nl bds", 
+
+"handcuffs": "hndcffs", 
+
+"whip": "whp", 
+
+"crop": "crp", 
+
+"gag": "gg", 
+
+"blindfold": "blndfld", 
+
+"ball gag": "bll gg", 
+
+"harness": "hrnss", 
+
+"chastity belt": "chstty blt", 
+
+"bondage gear": "bndg gr", 
+
+"leather": "lthr", 
+
+"latex": "ltx", 
+
+"rubber": "rbb", 
+
+"dominant": "dmnt", 
+
+"submissive": "sbmssv", 
+
+"switch": "swch", 
+                      
+"tits" : "tips" ,
 "Motherfuckers" : "mothafs" ,
 
-    "slave": "slv", 
+"slave": "slv", 
 
-    "master": "mstr", 
+"master": "mstr", 
 
-    "mistress": "mstrs", 
+"mistress": "mstrs", 
 
-    "sadist": "sdst", 
+"sadist": "sdst", 
 
-    "masochist": "mscst", 
+"masochist": "mscst", 
 
-    "sadomasochist": "sdmscs", 
+"sadomasochist": "sdmscs", 
 
-    "erotic": "rtc", 
+"erotic": "rtc", 
 
-    "sexual": "sxl", 
+"sexual": "sxl", 
 
-    "sensual": "snsl", 
+"sensual": "snsl", 
 
-    "intimate": "ntmt", 
+"intimate": "ntmt", 
 
-    "seductive": "sductv", 
+"seductive": "sductv", 
 
-    "titillating": "ttlltng", 
+"titillating": "ttlltng", 
 
-    "arousing": "rsng", 
+"arousing": "rsng", 
 
-    "stimulating": "stmltng", 
+"stimulating": "stmltng", 
 
-    "explicit": "xplct" ,
+"explicit": "xplct" ,
 
-    "drug": "drag" ,
+"drug": "drag" ,
 
-    "drugs": "drags" ,
+"drugs": "drags" ,
 
-    "cocaine": "ccane"
-            // Add more single-word and multi-word phrase replacements here
-        };
+"cocaine": "ccane"
+ };
 
         const specialCharacterReplacements = {
+            // Add your special character replacements here
+
+            
             "À": "A",
             "Á": "A",
             "Â": "A",
@@ -1099,7 +1111,7 @@
             "ž": "z",
             "æ": "ae",
             "ǽ": "ae"
-            // Add more special character replacements here
+
         };
 
         function processText(action) {
@@ -1144,9 +1156,7 @@
             const changes = {};
             let changesCount = 0;
 
-            // Sort keys by length to ensure multi-word phrases are replaced first
             const keys = Object.keys(replacementsDict).sort((a, b) => b.length - a.length);
-
             keys.forEach(key => {
                 const regex = useWordBoundary ? new RegExp(`\\b${key}\\b`, 'gi') : new RegExp(key, 'gi');
                 if (regex.test(text)) {
@@ -1235,8 +1245,72 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-            alert('Output copied to clipboard');
+            alert('Output copied to clipboard!');
+        }
+
+        // New Text Splitting Script
+        function removeExtraLineSpaces(text) {
+            return text.replace(/\n\s*\n/g, '\n');  // Replace multiple line spaces with a single line space
+        }
+
+        function splitText() {
+            const inputText = document.getElementById('inputText').value;
+            const sanitizedText = removeExtraLineSpaces(inputText);
+            const chunkSize = 20000;
+            const textChunks = [];
+            let currentPosition = 0;
+
+            while (currentPosition < sanitizedText.length) {
+                let nextChunkEnd = currentPosition + chunkSize;
+
+                // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
+                if (nextChunkEnd < sanitizedText.length) {
+                    let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
+                    let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
+                    nextChunkEnd = Math.max(lastSpace, lastNewLine);
+                    
+                    // If no space or newline is found, fallback to chunk size
+                    if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
+                        nextChunkEnd = currentPosition + chunkSize;
+                    }
+                }
+
+                textChunks.push(sanitizedText.slice(currentPosition, nextChunkEnd));
+                currentPosition = nextChunkEnd;
+            }
+
+            displaySplitText(textChunks);
+        }
+
+        function displaySplitText(chunks) {
+            const outputContainer = document.getElementById('outputContainer');
+            outputContainer.innerHTML = '';  // Clear any previous output
+
+            chunks.forEach((chunk, index) => {
+                const chunkElement = document.createElement('div');
+                chunkElement.classList.add('split-text');
+                chunkElement.innerHTML = `
+                    <div class="output-buttons">
+                        <h3>Text Chunk ${index + 1}</h3>
+                        <button onclick="copyToClipboard(${index})">Copy Chunk</button>
+                    </div>
+                    <textarea id="chunk${index}" class="split-text">${chunk}</textarea>
+                `;
+                outputContainer.appendChild(chunkElement);
+            });
+        }
+
+        function copyToClipboard(chunkIndex) {
+            const textToCopy = document.getElementById(`chunk${chunkIndex}`).value;
+            const tempTextarea = document.createElement('textarea');
+            document.body.appendChild(tempTextarea);
+            tempTextarea.value = textToCopy;
+            tempTextarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextarea);
+            alert('Text copied to clipboard!');
         }
     </script>
 </body>
 </html>
+
