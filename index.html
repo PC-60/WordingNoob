@@ -103,19 +103,18 @@
         <button onclick="processText('replace')">Replace Words</button>
         <button onclick="processText('delete')">Delete Words</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
-        <button onclick="splitText()">Split Text</button> <!-- New button for text splitting -->
+        <button onclick="splitText()">Split Text</button>
         <div class="output-section">
             <div id="outputText" class="output-text"></div>
             <button onclick="copyOutput()">Copy to Clipboard</button>
             <div id="replacementsList"></div>
-            <div id="outputContainer"></div> <!-- Container to show split text -->
+            <div id="outputContainer"></div> 
         </div>
     </div>
     <script>
-        // Existing text processing script
+        /
         const replacements = {
-             // Add your replacements here 
-
+             
 "hard": "strong", 
 
 "beautiful": "appealing", 
@@ -979,7 +978,7 @@
  };
 
         const specialCharacterReplacements = {
-            // Add your special character replacements here
+           
 
             
             "À": "A",
@@ -1248,9 +1247,9 @@
            // alert('Output copied to clipboard!');
         }
 
-        // New Text Splitting Script
+       
         function removeExtraLineSpaces(text) {
-            return text.replace(/\n\s*\n/g, '\n');  // Replace multiple line spaces with a single line space
+            return text.replace(/\n\s*\n/g, '\n');  
         }
 
         function splitText() {
@@ -1263,13 +1262,13 @@
             while (currentPosition < sanitizedText.length) {
                 let nextChunkEnd = currentPosition + chunkSize;
 
-                // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
+                
                 if (nextChunkEnd < sanitizedText.length) {
                     let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
                     let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
                     nextChunkEnd = Math.max(lastSpace, lastNewLine);
                     
-                    // If no space or newline is found, fallback to chunk size
+                   
                     if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
                         nextChunkEnd = currentPosition + chunkSize;
                     }
