@@ -103,18 +103,19 @@
         <button onclick="processText('replace')">Replace Words</button>
         <button onclick="processText('delete')">Delete Words</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
-        <button onclick="splitText()">Split Text</button>
+        <button onclick="splitText()">Split Text</button> <!-- New button for text splitting -->
         <div class="output-section">
             <div id="outputText" class="output-text"></div>
             <button onclick="copyOutput()">Copy to Clipboard</button>
             <div id="replacementsList"></div>
-            <div id="outputContainer"></div> 
+            <div id="outputContainer"></div> <!-- Container to show split text -->
         </div>
     </div>
     <script>
-        
+        // Existing text processing script
         const replacements = {
-             
+             // Add your replacements here 
+
 "hard": "strong", 
 
 "beautiful": "appealing", 
@@ -204,8 +205,6 @@
 "fucking": "f", 
     "Fucker" : "f er",
 "Fuckers" : "f ers",
-
-"Naruto": "Naruto", 
 
 "Uzumaki": "Uhzumaaki", 
 
@@ -978,7 +977,7 @@
  };
 
         const specialCharacterReplacements = {
-           
+            // Add your special character replacements here
 
             
             "À": "A",
@@ -1113,18 +1112,15 @@
 
         };
 
-        
-            function processText(action) {
-    let inputText = document.getElementById('inputText').value;
-    let processedResult = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
+        function processText(action) {
+            let inputText = document.getElementById('inputText').value;
+            let processedResult = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
 
-    // Apply the continuous dots replacement after processing
-    processedResult.plainText = removeContinuousDots(processedResult.plainText);
-    processedResult.plainText = removeRepeatedWords(processedResult.plainText);
+            processedResult.plainText = removeContinuousDots(processedResult.plainText);
+            processedResult.plainText = removeRepeatedWords(processedResult.plainText);
 
-    document.getElementById('outputText').innerHTML = processedResult.plainText;
-    document.getElementById('outputText').dataset.plainText = processedResult.plainText;
-
+            document.getElementById('outputText').innerHTML = processedResult.highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedResult.plainText;
 
             let replacementsList = document.getElementById('replacementsList');
             replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
@@ -1214,9 +1210,8 @@
         }
 
         function removeContinuousDots(text) {
-    return text.replace(/\.{3,}/g, '.');  // Replaces sequences of 3 or more dots with a single dot
-}
-
+            return text.replace(/\.{3,}/g, '');
+        }
 
         function removeRepeatedWords(text) {
             return text.split(/[.!?]/).map(sentence => {
@@ -1251,9 +1246,9 @@
            // alert('Output copied to clipboard!');
         }
 
-       
+        // New Text Splitting Script
         function removeExtraLineSpaces(text) {
-            return text.replace(/\n\s*\n/g, '\n');  
+            return text.replace(/\n\s*\n/g, '\n');  // Replace multiple line spaces with a single line space
         }
 
         function splitText() {
@@ -1266,13 +1261,13 @@
             while (currentPosition < sanitizedText.length) {
                 let nextChunkEnd = currentPosition + chunkSize;
 
-                
+                // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
                 if (nextChunkEnd < sanitizedText.length) {
                     let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
                     let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
                     nextChunkEnd = Math.max(lastSpace, lastNewLine);
                     
-                   
+                    // If no space or newline is found, fallback to chunk size
                     if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
                         nextChunkEnd = currentPosition + chunkSize;
                     }
