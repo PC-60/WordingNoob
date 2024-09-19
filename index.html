@@ -94,6 +94,9 @@
             justify-content: space-between;
             align-items: center;
         }
+        .completed-checkbox {
+            margin-left: 15px;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +119,7 @@
         const replacements = {
              // Add your replacements here 
 
+             
 "hard": "strong", 
 
 "beautiful": "appealing", 
@@ -974,12 +978,11 @@
 "drugs": "drags" ,
 
 "cocaine": "ccane"
- };
+        };
 
         const specialCharacterReplacements = {
             // Add your special character replacements here
 
-            
             "À": "A",
             "Á": "A",
             "Â": "A",
@@ -1109,6 +1112,7 @@
             "ž": "z",
             "æ": "ae",
             "ǽ": "ae"
+
 
         };
 
@@ -1243,7 +1247,6 @@
             textarea.select();
             document.execCommand('copy');
             document.body.removeChild(textarea);
-           // alert('Output copied to clipboard!');
         }
 
         // New Text Splitting Script
@@ -1291,6 +1294,9 @@
                     <div class="output-buttons">
                         <h3>Text Chunk ${index + 1}</h3>
                         <button onclick="copyToClipboard(${index})">Copy Chunk</button>
+                        <label class="completed-checkbox">
+                            <input type="checkbox" onchange="toggleCompleted(${index})"> Completed
+                        </label>
                     </div>
                     <textarea id="chunk${index}" class="split-text">${chunk}</textarea>
                 `;
@@ -1306,7 +1312,17 @@
             tempTextarea.select();
             document.execCommand('copy');
             document.body.removeChild(tempTextarea);
-           // alert('Text copied to clipboard!');
+        }
+
+        // Toggle the background color to red when "Completed" is checked
+        function toggleCompleted(chunkIndex) {
+            const chunkElement = document.getElementById(`chunk${chunkIndex}`);
+            const checkbox = document.querySelector(`#chunk${chunkIndex}`).previousElementSibling.querySelector('input[type="checkbox"]');
+            if (checkbox.checked) {
+                chunkElement.style.backgroundColor = '#ffcccc'; // Change to red for the current chunk
+            } else {
+                chunkElement.style.backgroundColor = '#e8f5e9'; // Reset the background for the current chunk
+            }
         }
     </script>
 </body>
