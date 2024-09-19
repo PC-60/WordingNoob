@@ -21,6 +21,14 @@
             background-color: #121212;
             color: #f4f4f9;
         }
+           .logo {
+    position: fixed; /* Fixed position in the viewport */
+    top: 10px;      /* 10px from the top */
+    right: 10px;    /* 10px from the right */
+    width: 100px;   /* Adjust the size */
+    height: auto;
+    z-index: 100;   /* Ensure it stays above other elements */
+}
 
         .container {
             width: 90%;
@@ -164,6 +172,7 @@
             <div id="outputContainer"></div> <!-- Separate container for Split Text output without spacing -->
         </div>
     </div>
+<img src="android-apple.gif" class="logo" alt="Logo GIF"> <!-- Replace with your GIF's path -->
     <script>
         const replacements = {
 
