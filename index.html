@@ -14,19 +14,35 @@
             align-items: center;
             background-color: #f4f4f9;
             color: #333;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        body.dark-mode {
+            background-color: #121212;
+            color: #f4f4f9;
+        }
+
         .container {
             width: 90%;
             max-width: 1200px;
             margin: 20px auto;
             background: #fff;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             border-radius: 8px;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        .container.dark-mode {
+            background: #333;
+            color: #f4f4f9;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
         h1 {
             color: #4CAF50;
         }
+
         textarea {
             width: 100%;
             height: 200px;
@@ -36,7 +52,15 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             resize: none;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        textarea.dark-mode {
+            background-color: #2b2b2b;
+            color: #f4f4f9;
+            border-color: #555;
+        }
+
         button {
             padding: 10px 20px;
             font-size: 16px;
@@ -46,81 +70,102 @@
             border: none;
             border-radius: 4px;
             margin: 5px;
+            transition: background-color 0.3s, color 0.3s;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
+        button.dark-mode {
+            background-color: #555;
+            color: white;
+        }
+
         .output-section {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        .output-section .output-text, .split-text {
+
+        .output-section .output-text {
             width: 100%;
-            height: 150px;
+            height: 200px;  /* Smaller output for Split Text */
             margin-bottom: 20px;
             padding: 10px;
-            font-size: 16px;
+            font-size: 14px;  /* Smaller font size */
             border: 1px solid #ccc;
             border-radius: 4px;
             background-color: #e8f5e9;
             overflow: auto;
             white-space: pre-wrap;
+            transition: background-color 0.3s, color 0.3s;
         }
+
+        .output-section .output-text.dark-mode {
+            background-color: #2b2b2b;
+            color: #f4f4f9;
+            border-color: #555;
+        }
+
+        .split-text {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
         .highlight {
             background-color: yellow;
             font-weight: bold;
         }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        ul li {
-            background: #f9f9f9;
-            margin: 5px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        ul li span {
-            background-color: #4CAF50;
-            color: white;
-            padding: 3px 7px;
-            border-radius: 3px;
-            margin-left: 10px;
-        }
-        .output-buttons {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+
         .completed-checkbox {
             margin-left: 15px;
+        }
+
+        #outputContainer {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 20px;
+        }
+
+        .dark-mode-toggle {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .dark-mode-toggle.dark-mode {
+            background-color: #555;
+            color: white;
         }
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <h1>Text Processor</h1>
         <textarea id="inputText" placeholder="Enter your text here..."></textarea>
         <button onclick="processText('replace')">Replace Words</button>
         <button onclick="processText('delete')">Delete Words</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
-        <button onclick="splitText()">Split Text</button> <!-- New button for text splitting -->
+        <button onclick="splitText()">Split Text</button> <!-- For Split Text behavior -->
+        <button onclick="splitTextWithSpacing()">Split Text with Spacing</button> <!-- For Split Text with Spacing behavior -->
+        <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()"> Dark Mode</button>
         <div class="output-section">
-            <div id="outputText" class="output-text"></div>
+            <div id="outputText" class="output-text"></div> <!-- Smaller output area for Split Text with Spacing -->
             <button onclick="copyOutput()">Copy to Clipboard</button>
             <div id="replacementsList"></div>
-            <div id="outputContainer"></div> <!-- Container to show split text -->
+            <div id="outputContainer"></div> <!-- Separate container for Split Text output without spacing -->
         </div>
     </div>
     <script>
-        // Existing text processing script
         const replacements = {
-             // Add your replacements here 
 
-             
-"hard": "strong", 
+
+            "hard": "strong", 
 
 "beautiful": "appealing", 
 
@@ -978,11 +1023,10 @@
 "drugs": "drags" ,
 
 "cocaine": "ccane"
+
+
         };
-
         const specialCharacterReplacements = {
-            // Add your special character replacements here
-
             "À": "A",
             "Á": "A",
             "Â": "A",
@@ -1113,7 +1157,7 @@
             "æ": "ae",
             "ǽ": "ae"
 
-
+           
         };
 
         function processText(action) {
@@ -1292,16 +1336,60 @@
                 chunkElement.classList.add('split-text');
                 chunkElement.innerHTML = `
                     <div class="output-buttons">
-                        <h3>Text Chunk ${index + 1}</h3>
-                        <button onclick="copyToClipboard(${index})">Copy Chunk</button>
-                        <label class="completed-checkbox">
-                            <input type="checkbox" onchange="toggleCompleted(${index})"> Completed
-                        </label>
+                        <button onclick="copyToClipboard(${index})">Copy Chunk</button> <!-- Retain the Copy Chunk button -->
+                        <label><input type="checkbox" class="completed-checkbox" onchange="markAsCompleted(this, 'chunk${index}')"> Completed</label>
                     </div>
-                    <textarea id="chunk${index}" class="split-text">${chunk}</textarea>
+                    <textarea id="chunk${index}" class="split-text" readonly>${chunk}</textarea>
                 `;
                 outputContainer.appendChild(chunkElement);
             });
+        }
+
+        function splitTextWithSpacing() {
+            const inputText = document.getElementById('inputText').value;
+            const sanitizedText = removeExtraLineSpaces(inputText);
+            const chunkSize = 7600;
+            const textChunks = [];
+            let currentPosition = 0;
+
+            while (currentPosition < sanitizedText.length) {
+                let nextChunkEnd = currentPosition + chunkSize;
+
+                // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
+                if (nextChunkEnd < sanitizedText.length) {
+                    let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
+                    let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
+                    nextChunkEnd = Math.max(lastSpace, lastNewLine);
+                    
+                    // If no space or newline is found, fallback to chunk size
+                    if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
+                        nextChunkEnd = currentPosition + chunkSize;
+                    }
+                }
+
+                textChunks.push(sanitizedText.slice(currentPosition, nextChunkEnd));
+                currentPosition = nextChunkEnd;
+            }
+
+            displaySplitTextWithSpacing(textChunks);
+        }
+
+        function displaySplitTextWithSpacing(chunks) {
+            const outputText = document.getElementById('outputText');
+            outputText.innerHTML = '';  // Clear previous output
+
+            chunks.forEach((chunk, index) => {
+                outputText.innerHTML += `${chunk} \n\n <span class="highlight">--- GAREEB HU ANPAD NHI ---</span> \n\n`;
+            });
+        }
+
+        function markAsCompleted(checkbox, chunkId) {
+            const chunkElement = document.getElementById(chunkId);
+            if (checkbox.checked) {
+                chunkElement.style.backgroundColor = 'red';  // Change color to red if checked
+            } else {
+                chunkElement.style.backgroundColor = '';  // Reset color if unchecked
+            }
         }
 
         function copyToClipboard(chunkIndex) {
@@ -1314,15 +1402,16 @@
             document.body.removeChild(tempTextarea);
         }
 
-        // Toggle the background color to red when "Completed" is checked
-        function toggleCompleted(chunkIndex) {
-            const chunkElement = document.getElementById(`chunk${chunkIndex}`);
-            const checkbox = document.querySelector(`#chunk${chunkIndex}`).previousElementSibling.querySelector('input[type="checkbox"]');
-            if (checkbox.checked) {
-                chunkElement.style.backgroundColor = '#ffcccc'; // Change to red for the current chunk
-            } else {
-                chunkElement.style.backgroundColor = '#e8f5e9'; // Reset the background for the current chunk
-            }
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('container').classList.toggle('dark-mode');
+            document.getElementById('inputText').classList.toggle('dark-mode');
+            document.getElementById('outputText').classList.toggle('dark-mode');
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => button.classList.toggle('dark-mode'));
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => textarea.classList.toggle('dark-mode'));
         }
     </script>
 </body>
