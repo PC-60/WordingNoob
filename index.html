@@ -1413,11 +1413,13 @@
     document.execCommand('copy');
     document.body.removeChild(tempTextarea);
 
-    // Change button color after copying
+    // Change button color and text after copying
     const copyButton = document.querySelector(`#chunk${chunkIndex}`).previousElementSibling.querySelector('button');
-    copyButton.style.backgroundColor = 'yellow'; // Change color to yellow (or any other color)
+    copyButton.style.backgroundColor = 'yellow'; // Change background color to yellow
+    copyButton.style.color = 'black'; // Change text color to black
     copyButton.innerHTML = 'Copied!'; // Change text to indicate it's been copied
 }
+
 
         // Dark Mode Toggle
         function toggleDarkMode() {
