@@ -1404,15 +1404,20 @@
             }
         }
 
-        function copyToClipboard(chunkIndex) {
-            const textToCopy = document.getElementById(`chunk${chunkIndex}`).value;
-            const tempTextarea = document.createElement('textarea');
-            document.body.appendChild(tempTextarea);
-            tempTextarea.value = textToCopy;
-            tempTextarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempTextarea);
-        }
+       function copyToClipboard(chunkIndex) {
+    const textToCopy = document.getElementById(`chunk${chunkIndex}`).value;
+    const tempTextarea = document.createElement('textarea');
+    document.body.appendChild(tempTextarea);
+    tempTextarea.value = textToCopy;
+    tempTextarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
+
+    // Change button color after copying
+    const copyButton = document.querySelector(`#chunk${chunkIndex}`).previousElementSibling.querySelector('button');
+    copyButton.style.backgroundColor = 'yellow'; // Change color to yellow (or any other color)
+    copyButton.innerHTML = 'Copied!'; // Change text to indicate it's been copied
+}
 
         // Dark Mode Toggle
         function toggleDarkMode() {
