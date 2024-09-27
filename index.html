@@ -29,7 +29,12 @@
     height: auto;
     z-index: 100;   /* Ensure it stays above other elements */
 }
-
+.estimation-text {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 18px; /* Slightly larger font */
+}
         .container {
             width: 90%;
             max-width: 1200px;
@@ -41,6 +46,10 @@
             border-radius: 8px;
             transition: background-color 0.3s, color 0.3s;
         }
+       
+/* Style for the estimation text */
+
+
 
         .container.dark-mode {
             background: #333;
@@ -1269,6 +1278,11 @@
             };
         }
 
+        const readingTimePerChunk = {
+    Brandon: 7.50,
+    Christopher: 6.80
+};
+
         function removeContinuousDots(text) {
             return text.replace(/\.{3,}/g, '');
         }
@@ -1339,23 +1353,68 @@
             displaySplitText(textChunks);
         }
 
-        function displaySplitText(chunks) {
-            const outputContainer = document.getElementById('outputContainer');
-            outputContainer.innerHTML = '';  // Clear any previous output
+        function formatTimeInHours(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.round(totalMinutes % 60);
+    return hours > 0 ? `${hours} hrs ${minutes} mins` : `${minutes} mins`;
+}
 
-            chunks.forEach((chunk, index) => {
-                const chunkElement = document.createElement('div');
-                chunkElement.classList.add('split-text');
-                chunkElement.innerHTML = `
-                    <div class="output-buttons">
-                        <button onclick="copyToClipboard(${index})">Copy Chunk</button> <!-- Retain the Copy Chunk button -->
-                        <label><input type="checkbox" class="completed-checkbox" onchange="markAsCompleted(this, 'chunk${index}')"> Completed</label>
-                    </div>
-                    <textarea id="chunk${index}" class="split-text" readonly>${chunk}</textarea>
-                `;
-                outputContainer.appendChild(chunkElement);
-            });
-        }
+// Function to calculate total estimated time in hours and minutes
+function calculateEstimatedTime(chunks) {
+    let estimationText = '';
+    for (const person in readingTimePerChunk) {
+        const totalMinutes = readingTimePerChunk[person] * chunks.length;
+        estimationText += `${person}: ${formatTimeInHours(totalMinutes)} total | `;
+    }
+    return estimationText.slice(0, -3); // Remove the trailing separator
+}
+
+// Updated displaySplitText function to include time estimation in hours
+function displaySplitText(chunks) {
+    const outputContainer = document.getElementById('outputContainer');
+    outputContainer.innerHTML = '';  // Clear any previous output
+
+    // Create a container for the estimated time
+    const estimationDiv = document.createElement('div');
+    estimationDiv.style.textAlign = 'center';
+    estimationDiv.style.marginBottom = '20px';
+    estimationDiv.style.fontWeight = 'bold';
+    estimationDiv.classList.add('estimation-text');  // Add estimation-text class for styling
+    estimationDiv.innerHTML = `Estimated Time: ${calculateEstimatedTime(chunks)}`;
+    outputContainer.appendChild(estimationDiv);  // Add the estimation div to the outputContainer
+
+    chunks.forEach((chunk, index) => {
+        const chunkElement = document.createElement('div');
+        chunkElement.classList.add('split-text', 'fade-in');  // Add fade-in effect class
+        chunkElement.innerHTML = `
+            <div class="output-buttons">
+                <button onclick="copyToClipboard(${index})">Copy Chunk</button> <!-- Retain the Copy Chunk button -->
+                <label><input type="checkbox" class="completed-checkbox" onchange="markAsCompleted(this, 'chunk${index}')"> Completed</label>
+            </div>
+            <textarea id="chunk${index}" class="split-text" readonly>${chunk}</textarea>
+        `;
+        outputContainer.appendChild(chunkElement);
+    });
+}
+
+// Updated displaySplitTextWithSpacing function to include time estimation in hours
+function displaySplitTextWithSpacing(chunks) {
+    const outputText = document.getElementById('outputText');
+    outputText.innerHTML = '';  // Clear previous output
+
+    // Create a container for the estimated time
+    const estimationDiv = document.createElement('div');
+    estimationDiv.style.textAlign = 'center';
+    estimationDiv.style.marginBottom = '20px';
+    estimationDiv.style.fontWeight = 'bold';
+    estimationDiv.classList.add('estimation-text');  // Add estimation-text class for styling
+    estimationDiv.innerHTML = `Estimated Time: ${calculateEstimatedTime(chunks)}`;
+    outputText.appendChild(estimationDiv);  // Add the estimation div to the outputText
+
+    chunks.forEach((chunk, index) => {
+        outputText.innerHTML += `${chunk} \n\n <span class="highlight">--- GAREEB HU ANPAD NHI ---</span> \n\n`;
+    });
+}
 
         function splitTextWithSpacing() {
             const inputText = document.getElementById('inputText').value;
