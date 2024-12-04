@@ -1282,7 +1282,7 @@
                 let lastWord = '';
                 let count = 0;
                 for (let word of words) {
-                    if (word === lastWord) {
+                    if (word == lastWord) {
                         count++;
                         if (count < 4) {
                             result.push(word);
