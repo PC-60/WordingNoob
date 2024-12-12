@@ -172,7 +172,7 @@
         <button onclick="processText('delete')">Delete Words</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
         <button onclick="splitText()">Split Text</button> <!-- For Split Text behavior -->
-        <button onclick="splitTextWithSpacing()">Split Text with Spacing</button> <!-- For Split Text with Spacing behavior -->
+        <button onclick="goToPage()">BETA </button> <!-- For Split Text with Spacing behavior -->
         <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()"> Dark Mode</button>
         <div class="output-section">
             <div id="outputText" class="output-text"></div> <!-- Smaller output area for Split Text with Spacing -->
@@ -1205,7 +1205,9 @@
                 ).join('') + 
             `</ul>`;
         }
-
+function goToPage() {
+            window.location.href = "index1.html"; // Specify the target HTML file
+        }
         function replaceWords(text, replacementsDict = replacements, useWordBoundary = true) {
             const changes = {};
             let changesCount = 0;
