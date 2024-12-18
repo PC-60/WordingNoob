@@ -123,35 +123,38 @@
         let chunks = [];
         let currentChunkIndex = 0;
 
-        function splitTextWithSpacing() {
-            let inputText = document.getElementById('inputText').value.trim();
+       function splitTextWithSpacing() {
+    let inputText = document.getElementById('inputText').value.trim();
 
-            // Replace continuous dots with two dots, and remove underscores
-            inputText = inputText.replace(/\.{3,}/g, '.'); // Replace continuous dots with two dots
-            inputText = inputText.replace(/_+/g, ''); // Remove underscores
-            inputText = inputText.replace(/\s+_/g, ''); // Remove trailing underscores
+    // Replace continuous dots with a single dot, and remove underscores
+    inputText = inputText.replace(/\.{3,}/g, '.'); // Replace continuous dots
+    inputText = inputText.replace(/_+/g, ''); // Remove underscores
+    inputText = inputText.replace(/\s+_/g, ''); // Remove trailing underscores
 
-            const chunkSize = 7600;
-            chunks = [];
+    // Remove extra line spaces
+    inputText = inputText.replace(/\n\s*\n+/g, '\n'); // Replace multiple line breaks with a single line break
 
-            let currentPosition = 0;
-            while (currentPosition < inputText.length) {
-                let nextChunkEnd = currentPosition + chunkSize;
+    const chunkSize = 7600;
+    chunks = [];
 
-                if (nextChunkEnd < inputText.length) {
-                    let lastSpace = inputText.lastIndexOf(' ', nextChunkEnd);
-                    nextChunkEnd = lastSpace > currentPosition ? lastSpace : nextChunkEnd;
-                }
+    let currentPosition = 0;
+    while (currentPosition < inputText.length) {
+        let nextChunkEnd = currentPosition + chunkSize;
 
-                chunks.push(inputText.slice(currentPosition, nextChunkEnd).trim());
-                currentPosition = nextChunkEnd;
-            }
-
-            if (chunks.length > 0) {
-                currentChunkIndex = 0;
-                displayCurrentChunk();
-            }
+        if (nextChunkEnd < inputText.length) {
+            let lastSpace = inputText.lastIndexOf(' ', nextChunkEnd);
+            nextChunkEnd = lastSpace > currentPosition ? lastSpace : nextChunkEnd;
         }
+
+        chunks.push(inputText.slice(currentPosition, nextChunkEnd).trim());
+        currentPosition = nextChunkEnd;
+    }
+
+    if (chunks.length > 0) {
+        currentChunkIndex = 0;
+        displayCurrentChunk();
+    }
+}
 
         function displayCurrentChunk() {
             const outputContainer = document.getElementById('outputContainer');
