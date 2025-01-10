@@ -21,16 +21,20 @@
             background-color: #121212;
             color: #f4f4f9;
         }
-
-        .logo {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            width: 100px;
-            height: auto;
-            z-index: 100;
-        }
-
+           .logo {
+    position: fixed; /* Fixed position in the viewport */
+    top: 10px;      /* 10px from the top */
+    right: 10px;    /* 10px from the right */
+    width: 100px;   /* Adjust the size */
+    height: auto;
+    z-index: 100;   /* Ensure it stays above other elements */
+}
+.estimation-text {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+    font-size: 18px; /* Slightly larger font */
+}
         .container {
             width: 90%;
             max-width: 1200px;
@@ -42,11 +46,17 @@
             border-radius: 8px;
             transition: background-color 0.3s, color 0.3s;
         }
+       
+/* Style for the estimation text */
+
+
 
         .container.dark-mode {
             background: #333;
             color: #f4f4f9;
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+
+
         }
 
         h1 {
@@ -100,10 +110,10 @@
 
         .output-section .output-text {
             width: 100%;
-            height: 200px;
+            height: 200px;  /* Smaller output for Split Text */
             margin-bottom: 20px;
             padding: 10px;
-            font-size: 14px;
+            font-size: 14px;  /* Smaller font size */
             border: 1px solid #ccc;
             border-radius: 4px;
             background-color: #e8f5e9;
@@ -123,11 +133,34 @@
             margin-bottom: 10px;
         }
 
-        .estimation-text {
-            text-align: center;
+        .highlight {
+            background-color: yellow;
             font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 18px;
+        }
+
+        .completed-checkbox {
+            margin-left: 15px;
+        }
+
+        #outputContainer {
+            width: 100%;
+            max-width: 1000px;
+            margin-top: 20px;
+        }
+
+        .dark-mode-toggle {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+
+        .dark-mode-toggle.dark-mode {
+            background-color: #555;
+            color: white;
         }
     </style>
 </head>
@@ -138,62 +171,29 @@
         <button onclick="processText('replace')">Replace Words</button>
         <button onclick="processText('delete')">Delete Words</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
-        <button onclick="splitText()">Split Text</button>
-        <button onclick="splitTextWithSpacing()">Split Text with Spacing</button>
-        <button onclick="goToPage()">BETA</button>
-        <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()">Dark Mode</button>
+        <button onclick="splitText()">Split Text</button> <!-- For Split Text behavior -->
+        <button onclick="goToPage()">BETA </button> <!-- For Split Text with Spacing behavior -->
+        <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()"> Dark Mode</button>
         <div class="output-section">
-            <div id="outputText" class="output-text"></div>
+            <div id="outputText" class="output-text"></div> <!-- Smaller output area for Split Text with Spacing -->
+            <button onclick="copyOutput()">Copy to Clipboard</button>
             <div id="replacementsList"></div>
-            <div id="outputContainer"></div>
+            <div id="outputContainer"></div> <!-- Separate container for Split Text output without spacing -->
         </div>
     </div>
-    <img src="Picsart_25-01-09_09-50-59-029.png" class="logo" alt="Logo GIF">
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<img src="android-apple.gif" class="logo" alt="Logo GIF"> <!-- Replace with your GIF's path -->
     <script>
-        // Confetti animation on page load
-        function launchConfetti() {
-            confetti({
-                particleCount: 200,
-                spread: 100,
-                origin: { x: 0.5, y: 0.5 },
-                zIndex: 9999
-            });
-
-            setTimeout(() => {
-                confetti({
-                    particleCount: 150,
-                    angle: 60,
-                    spread: 70,
-                    origin: { x: 0, y: 0.6 },
-                    zIndex: 9999
-                });
-
-                confetti({
-                    particleCount: 150,
-                    angle: 120,
-                    spread: 70,
-                    origin: { x: 1, y: 0.6 },
-                    zIndex: 9999
-                });
-            }, 500);
-        }
-
-        window.onload = function() {
-            launchConfetti();
-        };
-
         const replacements = {
 
 
-"hard": "strong", 
-"boobs": "bub",
-"jerk": "jrk",
-"hard": "strong",
+            "hard": "strong", 
+            "boobs": "bub",
+            "jerk": "jrk",
+            "hard": "strong",
 "booby": "buby",
 "boobies": "bubies",
-"chest": "ch-st",
-
+            "chest": "ch-st",
+            
 
 "beautiful": "appealing", 
 
@@ -218,13 +218,13 @@
 "orgasm": "joy", 
 
 "sex": "love", 
-
+            
 "sexy": "secy", 
-          "Orgy" : "orgg" ,
+                      "Orgy" : "orgg" ,
 
 "make love": "connect", 
-"_": "", 
-
+            "_": "", 
+            
 
 "erotic": "intimate", 
 
@@ -239,41 +239,41 @@
 "libido": "energy", 
 
 "arousal": "excitement", 
-          "cunt" : "cnt" ,
+                      "cunt" : "cnt" ,
 
 "ecstasy": "joy", 
-          "Fuckin" : "f in" ,
+                      "Fuckin" : "f in" ,
 "Fuckwad" : "f wad" ,
 
-"sex": "sec", 
-          "Dicks" : "pp" ,
+    "sex": "sec", 
+                      "Dicks" : "pp" ,
 "Fucked" : "f" ,
 "Fucks" : "f" ,
 
-"fuck": "f", 
+    "fuck": "f", 
 
-"breast": "melons", 
-"breasts": "melons",
-"penis": "pp", 
+    "breast": "melons", 
+ "breasts": "melons",
+    "penis": "pp", 
 
-"vagina": "pp", 
+    "vagina": "pp", 
 
-"dick": "pp",
-"Dicking" : "ding",
-"Motherfucker" : "mothaf",
-"Cocksuckers" : "csuckers",
+    "dick": "pp",
+    "Dicking" : "ding",
+   "Motherfucker" : "mothaf",
+   "Cocksuckers" : "csuckers",
 
-"cock": "pp", 
+    "cock": "pp", 
 
-"pussy": "pp", 
+    "pussy": "pp", 
 
-"balls": "ball", 
+    "balls": "ball", 
 
-"bitch": "beach", 
+    "bitch": "beach", 
 
-"Bitches": "beaches", 
+    "Bitches": "beaches", 
 
-"Booty": "butt", 
+     "Booty": "butt", 
 
 "nipple": "mellons", 
 
@@ -284,7 +284,7 @@
 "virgin": "version", 
 
 "fucking": "f", 
-"Fucker" : "f er",
+    "Fucker" : "f er",
 "Fuckers" : "f ers",
 
 
@@ -350,7 +350,7 @@
 "tranny": "trny", 
 
 "homo": "hmo", 
-"homosexual": "homosecual", 
+            "homosexual": "homosecual", 
 
 "queer": "qer", 
 
@@ -538,7 +538,7 @@
 
 "fetuses": "fts", 
 
-"testes": "tsts", 
+    "testes": "tsts", 
 
 "semen": "smn", 
 
@@ -734,7 +734,7 @@
 
 "prostate": "prstt", 
 
-"adultery": "adlt", 
+     "adultery": "adlt", 
 
 "fornication": "frnctn", 
 
@@ -991,7 +991,7 @@
 "submissive": "sbmssv", 
 
 "switch": "swch", 
-          
+                      
 "tits" : "tips" ,
 "Motherfuckers" : "mothafs" ,
 
@@ -1032,454 +1032,454 @@
 "cocaine": "ccane"
 
 
-};
-const specialCharacterReplacements = {
-"À": "A",
-"Á": "A",
-"Â": "A",
-"Ã": "A",
-"Ä": "A",
-"Å": "A",
-"Ā": "A",
-"Ą": "A",
-"Ă": "A",
-"Ç": "C",
-"Ć": "C",
-"Č": "C",
-"Ĉ": "C",
-"Ċ": "C",
-"È": "E",
-"É": "E",
-"Ê": "E",
-"Ë": "E",
-"Ē": "E",
-"Ę": "E",
-"Ě": "E",
-"Ĕ": "E",
-"Ė": "E",
-"Ì": "I",
-"Í": "I",
-"Î": "I",
-"Ï": "I",
-"Ī": "I",
-"Ĩ": "I",
-"Ĭ": "I",
-"Į": "I",
-"İ": "I",
-"Ñ": "N",
-"Ń": "N",
-"Ň": "N",
-"Ņ": "N",
-"Ŋ": "N",
-"Ò": "O",
-"Ó": "O",
-"Ô": "O",
-"Õ": "O",
-"Ö": "O",
-"Ō": "O",
-"Ő": "O",
-"Ø": "O",
-"Ŏ": "O",
-"Ù": "U",
-"Ú": "U",
-"Û": "U",
-"Ü": "U",
-"Ū": "U",
-"Ů": "U",
-"Ű": "U",
-"Ŭ": "U",
-"Ũ": "U",
-"Ų": "U",
-"Ý": "Y",
-"Ÿ": "Y",
-"Ŷ": "Y",
-"Ź": "Z",
-"Ż": "Z",
-"Ž": "Z",
-"Æ": "AE",
-"Ǽ": "AE",
-"ß": "SS",
-"à": "a",
-"á": "a",
-"â": "a",
-"ã": "a",
-"ä": "a",
-"å": "a",
-"ā": "a",
-"ą": "a",
-"ă": "a",
-"ç": "c",
-"ć": "c",
-"č": "c",
-"ĉ": "c",
-"ċ": "c",
-"è": "e",
-"é": "e",
-"ê": "e",
-"ë": "e",
-"ē": "e",
-"ę": "e",
-"ě": "e",
-"ĕ": "e",
-"ė": "e",
-"ì": "i",
-"í": "i",
-"î": "i",
-"ï": "i",
-"ī": "i",
-"ĩ": "i",
-"ĭ": "i",
-"į": "i",
+        };
+        const specialCharacterReplacements = {
+            "À": "A",
+            "Á": "A",
+            "Â": "A",
+            "Ã": "A",
+            "Ä": "A",
+            "Å": "A",
+            "Ā": "A",
+            "Ą": "A",
+            "Ă": "A",
+            "Ç": "C",
+            "Ć": "C",
+            "Č": "C",
+            "Ĉ": "C",
+            "Ċ": "C",
+            "È": "E",
+            "É": "E",
+            "Ê": "E",
+            "Ë": "E",
+            "Ē": "E",
+            "Ę": "E",
+            "Ě": "E",
+            "Ĕ": "E",
+            "Ė": "E",
+            "Ì": "I",
+            "Í": "I",
+            "Î": "I",
+            "Ï": "I",
+            "Ī": "I",
+            "Ĩ": "I",
+            "Ĭ": "I",
+            "Į": "I",
+            "İ": "I",
+            "Ñ": "N",
+            "Ń": "N",
+            "Ň": "N",
+            "Ņ": "N",
+            "Ŋ": "N",
+            "Ò": "O",
+            "Ó": "O",
+            "Ô": "O",
+            "Õ": "O",
+            "Ö": "O",
+            "Ō": "O",
+            "Ő": "O",
+            "Ø": "O",
+            "Ŏ": "O",
+            "Ù": "U",
+            "Ú": "U",
+            "Û": "U",
+            "Ü": "U",
+            "Ū": "U",
+            "Ů": "U",
+            "Ű": "U",
+            "Ŭ": "U",
+            "Ũ": "U",
+            "Ų": "U",
+            "Ý": "Y",
+            "Ÿ": "Y",
+            "Ŷ": "Y",
+            "Ź": "Z",
+            "Ż": "Z",
+            "Ž": "Z",
+            "Æ": "AE",
+            "Ǽ": "AE",
+            "ß": "SS",
+            "à": "a",
+            "á": "a",
+            "â": "a",
+            "ã": "a",
+            "ä": "a",
+            "å": "a",
+            "ā": "a",
+            "ą": "a",
+            "ă": "a",
+            "ç": "c",
+            "ć": "c",
+            "č": "c",
+            "ĉ": "c",
+            "ċ": "c",
+            "è": "e",
+            "é": "e",
+            "ê": "e",
+            "ë": "e",
+            "ē": "e",
+            "ę": "e",
+            "ě": "e",
+            "ĕ": "e",
+            "ė": "e",
+            "ì": "i",
+            "í": "i",
+            "î": "i",
+            "ï": "i",
+            "ī": "i",
+            "ĩ": "i",
+            "ĭ": "i",
+            "į": "i",
+            
+            "ñ": "n",
+            "ń": "n",
+            "ň": "n",
+            "ņ": "n",
+            "ŋ": "n",
+            "ò": "o",
+            "ó": "o",
+            "ô": "o",
+            "õ": "o",
+            "ö": "o",
+            "ō": "o",
+            "ő": "o",
+            "ø": "o",
+            "ŏ": "o",
+            "ù": "u",
+            "ú": "u",
+            "û": "u",
+            "ü": "u",
+            "ū": "u",
+            "ů": "u",
+            "ű": "u",
+            "ŭ": "u",
+            "ũ": "u",
+            "ų": "u",
+            "ý": "y",
+            "ÿ": "y",
+            "ŷ": "y",
+            "ź": "z",
+            "ż": "z",
+            "ž": "z",
+            "æ": "ae",
+            "_":"",
+            "ǽ": "ae"
 
-"ñ": "n",
-"ń": "n",
-"ň": "n",
-"ņ": "n",
-"ŋ": "n",
-"ò": "o",
-"ó": "o",
-"ô": "o",
-"õ": "o",
-"ö": "o",
-"ō": "o",
-"ő": "o",
-"ø": "o",
-"ŏ": "o",
-"ù": "u",
-"ú": "u",
-"û": "u",
-"ü": "u",
-"ū": "u",
-"ů": "u",
-"ű": "u",
-"ŭ": "u",
-"ũ": "u",
-"ų": "u",
-"ý": "y",
-"ÿ": "y",
-"ŷ": "y",
-"ź": "z",
-"ż": "z",
-"ž": "z",
-"æ": "ae",
-"_":"",
-"ǽ": "ae"
+           
+        };
 
+        function processText(action) {
+            let inputText = document.getElementById('inputText').value;
+            let processedResult = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
 
-};
+            processedResult.plainText = removeContinuousDots(processedResult.plainText);
+            processedResult.plainText = removeRepeatedWords(processedResult.plainText);
 
-function processText(action) {
-let inputText = document.getElementById('inputText').value;
-let processedResult = action === 'replace' ? replaceWords(inputText) : deleteWords(inputText);
+            document.getElementById('outputText').innerHTML = processedResult.highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedResult.plainText;
 
-processedResult.plainText = removeContinuousDots(processedResult.plainText);
-processedResult.plainText = removeRepeatedWords(processedResult.plainText);
+            let replacementsList = document.getElementById('replacementsList');
+            replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + 
+                Object.keys(processedResult.changes).map(key => 
+                    `<li>${key} -> ${replacements[key]}: <span>${processedResult.changes[key]}</span></li>`
+                ).join('') + 
+            `</ul>`;
+        }
 
-document.getElementById('outputText').innerHTML = processedResult.highlightedText;
-document.getElementById('outputText').dataset.plainText = processedResult.plainText;
+        function replaceSpecialCharacters() {
+            let inputText = document.getElementById('inputText').value;
+            let processedResult = replaceWords(inputText, specialCharacterReplacements, false);
 
-let replacementsList = document.getElementById('replacementsList');
-replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
-replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + 
-    Object.keys(processedResult.changes).map(key => 
-        `<li>${key} -> ${replacements[key]}: <span>${processedResult.changes[key]}</span></li>`
-    ).join('') + 
-`</ul>`;
-}
+            processedResult.plainText = removeContinuousDots(processedResult.plainText);
+            processedResult.plainText = removeRepeatedWords(processedResult.plainText);
 
-function replaceSpecialCharacters() {
-let inputText = document.getElementById('inputText').value;
-let processedResult = replaceWords(inputText, specialCharacterReplacements, false);
+            document.getElementById('outputText').innerHTML = processedResult.highlightedText;
+            document.getElementById('outputText').dataset.plainText = processedResult.plainText;
 
-processedResult.plainText = removeContinuousDots(processedResult.plainText);
-processedResult.plainText = removeRepeatedWords(processedResult.plainText);
-
-document.getElementById('outputText').innerHTML = processedResult.highlightedText;
-document.getElementById('outputText').dataset.plainText = processedResult.plainText;
-
-let replacementsList = document.getElementById('replacementsList');
-replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
-replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + 
-    Object.keys(processedResult.changes).map(key => 
-        `<li>${key} -> ${specialCharacterReplacements[key]}: <span>${processedResult.changes[key]}</span></li>`
-    ).join('') + 
-`</ul>`;
-}
+            let replacementsList = document.getElementById('replacementsList');
+            replacementsList.innerHTML = `<p><strong>Total changes: ${processedResult.changesCount}</strong></p>`;
+            replacementsList.innerHTML += `<h3>Change Counts:</h3><ul>` + 
+                Object.keys(processedResult.changes).map(key => 
+                    `<li>${key} -> ${specialCharacterReplacements[key]}: <span>${processedResult.changes[key]}</span></li>`
+                ).join('') + 
+            `</ul>`;
+        }
 function goToPage() {
-window.location.href = "Untitled-1.html"; // Specify the target HTML file
-}
-function replaceWords(text, replacementsDict = replacements, useWordBoundary = true) {
-const changes = {};
-let changesCount = 0;
-
-const keys = Object.keys(replacementsDict).sort((a, b) => b.length - a.length);
-keys.forEach(key => {
-    const regex = useWordBoundary ? new RegExp(`\\b${key}\\b`, 'gi') : new RegExp(key, 'gi');
-    if (regex.test(text)) {
-        text = text.replace(regex, match => {
-            const replacement = replacementsDict[key];
-            if (!changes[key]) {
-                changes[key] = 0;
-            }
-            changes[key]++;
-            changesCount++;
-            return `<span class="highlight">${replacement}</span>`;
-        });
-    }
-});
-
-return {
-    highlightedText: text,
-    plainText: text.replace(/<span class="highlight">|<\/span>/g, ''),
-    changes,
-    changesCount
-};
-}
-
-function deleteWords(text) {
-const changes = {};
-let changesCount = 0;
-
-const words = text.split(/(\s+)/).map(word => {
-    let strippedWord = word.replace(/[^a-zA-Z]/g, '');
-    let lowerStrippedWord = strippedWord.toLowerCase();
-
-    for (let key in replacements) {
-        const regex = new RegExp(`\\b${key}\\b`, 'gi');
-        const regexEd = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
-        if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
-            if (!changes[key]) {
-                changes[key] = 0;
-            }
-            changes[key]++;
-            changesCount++;
-            return '';
+            window.location.href = "Untitled-1.html"; // Specify the target HTML file
         }
-    }
-    return word;
-});
+        function replaceWords(text, replacementsDict = replacements, useWordBoundary = true) {
+            const changes = {};
+            let changesCount = 0;
 
-return {
-    highlightedText: words.join(''),
-    plainText: words.join(''),
-    changes,
-    changesCount
+            const keys = Object.keys(replacementsDict).sort((a, b) => b.length - a.length);
+            keys.forEach(key => {
+                const regex = useWordBoundary ? new RegExp(`\\b${key}\\b`, 'gi') : new RegExp(key, 'gi');
+                if (regex.test(text)) {
+                    text = text.replace(regex, match => {
+                        const replacement = replacementsDict[key];
+                        if (!changes[key]) {
+                            changes[key] = 0;
+                        }
+                        changes[key]++;
+                        changesCount++;
+                        return `<span class="highlight">${replacement}</span>`;
+                    });
+                }
+            });
+
+            return {
+                highlightedText: text,
+                plainText: text.replace(/<span class="highlight">|<\/span>/g, ''),
+                changes,
+                changesCount
+            };
+        }
+
+        function deleteWords(text) {
+            const changes = {};
+            let changesCount = 0;
+
+            const words = text.split(/(\s+)/).map(word => {
+                let strippedWord = word.replace(/[^a-zA-Z]/g, '');
+                let lowerStrippedWord = strippedWord.toLowerCase();
+
+                for (let key in replacements) {
+                    const regex = new RegExp(`\\b${key}\\b`, 'gi');
+                    const regexEd = new RegExp(`\\b${key}(ed|ing|es|s)?\\b`, 'gi');
+                    if (regex.test(lowerStrippedWord) || regexEd.test(lowerStrippedWord)) {
+                        if (!changes[key]) {
+                            changes[key] = 0;
+                        }
+                        changes[key]++;
+                        changesCount++;
+                        return '';
+                    }
+                }
+                return word;
+            });
+
+            return {
+                highlightedText: words.join(''),
+                plainText: words.join(''),
+                changes,
+                changesCount
+            };
+        }
+
+        const readingTimePerChunk = {
+    Brandon: 7.50,
+    Christopher: 6.80
 };
-}
 
-const readingTimePerChunk = {
-Brandon: 7.50,
-Christopher: 6.80
-};
+        function removeContinuousDots(text) {
+            return text.replace(/\.{3,}/g, '');
+        }
 
-function removeContinuousDots(text) {
-return text.replace(/\.{3,}/g, '');
-}
+        function removeRepeatedWords(text) {
+            return text.split(/[.!?]/).map(sentence => {
+                let words = sentence.trim().split(/\s+/);
+                let result = [];
+                let lastWord = '';
+                let count = 0;
+                for (let word of words) {
+                    if (word == lastWord) {
+                        count++;
+                        if (count < 4) {
+                            result.push(word);
+                        }
+                    } else {
+                        lastWord = word;
+                        count = 1;
+                        result.push(word);
+                    }
+                }
+                return result.join(' ');
+            }).join('. ');
+        }
 
-function removeRepeatedWords(text) {
-return text.split(/[.!?]/).map(sentence => {
-    let words = sentence.trim().split(/\s+/);
-    let result = [];
-    let lastWord = '';
-    let count = 0;
-    for (let word of words) {
-        if (word == lastWord) {
-            count++;
-            if (count < 4) {
-                result.push(word);
+        function copyOutput() {
+            const outputText = document.getElementById('outputText').dataset.plainText;
+            const textarea = document.createElement('textarea');
+            textarea.value = outputText;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+        }
+
+        // New Text Splitting Script
+        function removeExtraLineSpaces(text) {
+            return text.replace(/\n\s*\n/g, '\n');  // Replace multiple line spaces with a single line space
+        }
+
+        function splitText() {
+            const inputText = document.getElementById('inputText').value;
+            const sanitizedText = removeExtraLineSpaces(inputText);
+            const chunkSize = 7600;
+            const textChunks = [];
+            let currentPosition = 0;
+
+            while (currentPosition < sanitizedText.length) {
+                let nextChunkEnd = currentPosition + chunkSize;
+
+                // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
+                if (nextChunkEnd < sanitizedText.length) {
+                    let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
+                    let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
+                    nextChunkEnd = Math.max(lastSpace, lastNewLine);
+                    
+                    // If no space or newline is found, fallback to chunk size
+                    if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
+                        nextChunkEnd = currentPosition + chunkSize;
+                    }
+                }
+
+                textChunks.push(sanitizedText.slice(currentPosition, nextChunkEnd));
+                currentPosition = nextChunkEnd;
             }
-        } else {
-            lastWord = word;
-            count = 1;
-            result.push(word);
+
+            displaySplitText(textChunks);
         }
-    }
-    return result.join(' ');
-}).join('. ');
-}
 
-function copyOutput() {
-const outputText = document.getElementById('outputText').dataset.plainText;
-const textarea = document.createElement('textarea');
-textarea.value = outputText;
-document.body.appendChild(textarea);
-textarea.select();
-document.execCommand('copy');
-document.body.removeChild(textarea);
-}
-
-// New Text Splitting Script
-function removeExtraLineSpaces(text) {
-return text.replace(/\n\s*\n/g, '\n');  // Replace multiple line spaces with a single line space
-}
-
-function splitText() {
-const inputText = document.getElementById('inputText').value;
-const sanitizedText = removeExtraLineSpaces(inputText);
-const chunkSize = 7600;
-const textChunks = [];
-let currentPosition = 0;
-
-while (currentPosition < sanitizedText.length) {
-    let nextChunkEnd = currentPosition + chunkSize;
-
-    // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
-    if (nextChunkEnd < sanitizedText.length) {
-        let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
-        let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
-        nextChunkEnd = Math.max(lastSpace, lastNewLine);
-        
-        // If no space or newline is found, fallback to chunk size
-        if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
-            nextChunkEnd = currentPosition + chunkSize;
-        }
-    }
-
-    textChunks.push(sanitizedText.slice(currentPosition, nextChunkEnd));
-    currentPosition = nextChunkEnd;
-}
-
-displaySplitText(textChunks);
-}
-
-function formatTimeInHours(totalMinutes) {
-const hours = Math.floor(totalMinutes / 60);
-const minutes = Math.round(totalMinutes % 60);
-return hours > 0 ? `${hours} hrs ${minutes} mins` : `${minutes} mins`;
+        function formatTimeInHours(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = Math.round(totalMinutes % 60);
+    return hours > 0 ? `${hours} hrs ${minutes} mins` : `${minutes} mins`;
 }
 
 // Function to calculate total estimated time in hours and minutes
 function calculateEstimatedTime(chunks) {
-let estimationText = '';
-for (const person in readingTimePerChunk) {
-const totalMinutes = readingTimePerChunk[person] * chunks.length;
-estimationText += `${person}: ${formatTimeInHours(totalMinutes)} total | `;
-}
-return estimationText.slice(0, -3); // Remove the trailing separator
+    let estimationText = '';
+    for (const person in readingTimePerChunk) {
+        const totalMinutes = readingTimePerChunk[person] * chunks.length;
+        estimationText += `${person}: ${formatTimeInHours(totalMinutes)} total | `;
+    }
+    return estimationText.slice(0, -3); // Remove the trailing separator
 }
 
 // Updated displaySplitText function to include time estimation in hours
 function displaySplitText(chunks) {
-const outputContainer = document.getElementById('outputContainer');
-outputContainer.innerHTML = '';  // Clear any previous output
+    const outputContainer = document.getElementById('outputContainer');
+    outputContainer.innerHTML = '';  // Clear any previous output
 
-// Create a container for the estimated time
-const estimationDiv = document.createElement('div');
-estimationDiv.style.textAlign = 'center';
-estimationDiv.style.marginBottom = '20px';
-estimationDiv.style.fontWeight = 'bold';
-estimationDiv.classList.add('estimation-text');  // Add estimation-text class for styling
-estimationDiv.innerHTML = `Estimated Time: ${calculateEstimatedTime(chunks)}`;
-outputContainer.appendChild(estimationDiv);  // Add the estimation div to the outputContainer
+    // Create a container for the estimated time
+    const estimationDiv = document.createElement('div');
+    estimationDiv.style.textAlign = 'center';
+    estimationDiv.style.marginBottom = '20px';
+    estimationDiv.style.fontWeight = 'bold';
+    estimationDiv.classList.add('estimation-text');  // Add estimation-text class for styling
+    estimationDiv.innerHTML = `Estimated Time: ${calculateEstimatedTime(chunks)}`;
+    outputContainer.appendChild(estimationDiv);  // Add the estimation div to the outputContainer
 
-chunks.forEach((chunk, index) => {
-const chunkElement = document.createElement('div');
-chunkElement.classList.add('split-text', 'fade-in');  // Add fade-in effect class
-chunkElement.innerHTML = `
-<div class="output-buttons">
-    <button onclick="copyToClipboard(${index})">Copy Chunk</button> <!-- Retain the Copy Chunk button -->
-    <label><input type="checkbox" class="completed-checkbox" onchange="markAsCompleted(this, 'chunk${index}')"> Completed</label>
-</div>
-<textarea id="chunk${index}" class="split-text" readonly>${chunk}</textarea>
-`;
-outputContainer.appendChild(chunkElement);
-});
+    chunks.forEach((chunk, index) => {
+        const chunkElement = document.createElement('div');
+        chunkElement.classList.add('split-text', 'fade-in');  // Add fade-in effect class
+        chunkElement.innerHTML = `
+            <div class="output-buttons">
+                <button onclick="copyToClipboard(${index})">Copy Chunk</button> <!-- Retain the Copy Chunk button -->
+                <label><input type="checkbox" class="completed-checkbox" onchange="markAsCompleted(this, 'chunk${index}')"> Completed</label>
+            </div>
+            <textarea id="chunk${index}" class="split-text" readonly>${chunk}</textarea>
+        `;
+        outputContainer.appendChild(chunkElement);
+    });
 }
 
 // Updated displaySplitTextWithSpacing function to include time estimation in hours
 function displaySplitTextWithSpacing(chunks) {
-const outputText = document.getElementById('outputText');
-outputText.innerHTML = '';  // Clear previous output
+    const outputText = document.getElementById('outputText');
+    outputText.innerHTML = '';  // Clear previous output
 
-// Create a container for the estimated time
-const estimationDiv = document.createElement('div');
-estimationDiv.style.textAlign = 'center';
-estimationDiv.style.marginBottom = '20px';
-estimationDiv.style.fontWeight = 'bold';
-estimationDiv.classList.add('estimation-text');  // Add estimation-text class for styling
-estimationDiv.innerHTML = `Estimated Time: ${calculateEstimatedTime(chunks)}`;
-outputText.appendChild(estimationDiv);  // Add the estimation div to the outputText
+    // Create a container for the estimated time
+    const estimationDiv = document.createElement('div');
+    estimationDiv.style.textAlign = 'center';
+    estimationDiv.style.marginBottom = '20px';
+    estimationDiv.style.fontWeight = 'bold';
+    estimationDiv.classList.add('estimation-text');  // Add estimation-text class for styling
+    estimationDiv.innerHTML = `Estimated Time: ${calculateEstimatedTime(chunks)}`;
+    outputText.appendChild(estimationDiv);  // Add the estimation div to the outputText
 
-chunks.forEach((chunk, index) => {
-outputText.innerHTML += `${chunk} \n\n <span class="highlight">--- GAREEB HU ANPAD NHI ---</span> \n\n`;
-});
+    chunks.forEach((chunk, index) => {
+        outputText.innerHTML += `${chunk} \n\n <span class="highlight">--- GAREEB HU ANPAD NHI ---</span> \n\n`;
+    });
 }
 
-function splitTextWithSpacing() {
-const inputText = document.getElementById('inputText').value;
-const sanitizedText = removeExtraLineSpaces(inputText);
-const chunkSize = 7600;
-const textChunks = [];
-let currentPosition = 0;
+        function splitTextWithSpacing() {
+            const inputText = document.getElementById('inputText').value;
+            const sanitizedText = removeExtraLineSpaces(inputText);
+            const chunkSize = 7600;
+            const textChunks = [];
+            let currentPosition = 0;
 
-while (currentPosition < sanitizedText.length) {
-    let nextChunkEnd = currentPosition + chunkSize;
+            while (currentPosition < sanitizedText.length) {
+                let nextChunkEnd = currentPosition + chunkSize;
 
-    // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
-    if (nextChunkEnd < sanitizedText.length) {
-        let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
-        let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
-        nextChunkEnd = Math.max(lastSpace, lastNewLine);
-        
-        // If no space or newline is found, fallback to chunk size
-        if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
-            nextChunkEnd = currentPosition + chunkSize;
+                // Ensure we don't cut off words: find the last space or newline before the chunkSize limit
+                if (nextChunkEnd < sanitizedText.length) {
+                    let lastSpace = sanitizedText.lastIndexOf(' ', nextChunkEnd);
+                    let lastNewLine = sanitizedText.lastIndexOf('\n', nextChunkEnd);
+                    nextChunkEnd = Math.max(lastSpace, lastNewLine);
+                    
+                    // If no space or newline is found, fallback to chunk size
+                    if (nextChunkEnd === -1 || nextChunkEnd < currentPosition) {
+                        nextChunkEnd = currentPosition + chunkSize;
+                    }
+                }
+
+                textChunks.push(sanitizedText.slice(currentPosition, nextChunkEnd));
+                currentPosition = nextChunkEnd;
+            }
+
+            displaySplitTextWithSpacing(textChunks);
         }
-    }
 
-    textChunks.push(sanitizedText.slice(currentPosition, nextChunkEnd));
-    currentPosition = nextChunkEnd;
-}
+        function displaySplitTextWithSpacing(chunks) {
+            const outputText = document.getElementById('outputText');
+            outputText.innerHTML = '';  // Clear previous output
 
-displaySplitTextWithSpacing(textChunks);
-}
+            chunks.forEach((chunk, index) => {
+                outputText.innerHTML += `${chunk} \n\n <span class="highlight">--- GAREEB HU ANPAD NHI ---</span> \n\n`;
+            });
+        }
 
-function displaySplitTextWithSpacing(chunks) {
-const outputText = document.getElementById('outputText');
-outputText.innerHTML = '';  // Clear previous output
+        function markAsCompleted(checkbox, chunkId) {
+            const chunkElement = document.getElementById(chunkId);
+            if (checkbox.checked) {
+                chunkElement.style.backgroundColor = 'red';  // Change color to red if checked
+            } else {
+                chunkElement.style.backgroundColor = '';  // Reset color if unchecked
+            }
+        }
 
-chunks.forEach((chunk, index) => {
-    outputText.innerHTML += `${chunk} \n\n <span class="highlight">--- GAREEB HU ANPAD NHI ---</span> \n\n`;
-});
-}
+       function copyToClipboard(chunkIndex) {
+    const textToCopy = document.getElementById(`chunk${chunkIndex}`).value;
+    const tempTextarea = document.createElement('textarea');
+    document.body.appendChild(tempTextarea);
+    tempTextarea.value = textToCopy;
+    tempTextarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextarea);
 
-function markAsCompleted(checkbox, chunkId) {
-const chunkElement = document.getElementById(chunkId);
-if (checkbox.checked) {
-    chunkElement.style.backgroundColor = 'red';  // Change color to red if checked
-} else {
-    chunkElement.style.backgroundColor = '';  // Reset color if unchecked
-}
-}
-
-function copyToClipboard(chunkIndex) {
-const textToCopy = document.getElementById(`chunk${chunkIndex}`).value;
-const tempTextarea = document.createElement('textarea');
-document.body.appendChild(tempTextarea);
-tempTextarea.value = textToCopy;
-tempTextarea.select();
-document.execCommand('copy');
-document.body.removeChild(tempTextarea);
-
-// Change button color and text after copying
-const copyButton = document.querySelector(`#chunk${chunkIndex}`).previousElementSibling.querySelector('button');
-copyButton.style.backgroundColor = 'yellow'; // Change background color to yellow
-copyButton.style.color = 'black'; // Change text color to black
-copyButton.innerHTML = 'Copied!'; // Change text to indicate it's been copied
+    // Change button color and text after copying
+    const copyButton = document.querySelector(`#chunk${chunkIndex}`).previousElementSibling.querySelector('button');
+    copyButton.style.backgroundColor = 'yellow'; // Change background color to yellow
+    copyButton.style.color = 'black'; // Change text color to black
+    copyButton.innerHTML = 'Copied!'; // Change text to indicate it's been copied
 }
 
 
-// Dark Mode Toggle
-function toggleDarkMode() {
-document.body.classList.toggle('dark-mode');
-document.getElementById('container').classList.toggle('dark-mode');
-document.getElementById('inputText').classList.toggle('dark-mode');
-document.getElementById('outputText').classList.toggle('dark-mode');
-const buttons = document.querySelectorAll('button');
-buttons.forEach(button => button.classList.toggle('dark-mode'));
-const textareas = document.querySelectorAll('textarea');
-textareas.forEach(textarea => textarea.classList.toggle('dark-mode'));
-}
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('container').classList.toggle('dark-mode');
+            document.getElementById('inputText').classList.toggle('dark-mode');
+            document.getElementById('outputText').classList.toggle('dark-mode');
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => button.classList.toggle('dark-mode'));
+            const textareas = document.querySelectorAll('textarea');
+            textareas.forEach(textarea => textarea.classList.toggle('dark-mode'));
+        }
     </script>
 </body>
 </html>
