@@ -129,6 +129,8 @@
     // Replace continuous dots with a single dot, and remove underscores
     inputText = inputText.replace(/\.{3,}/g, '.'); // Replace continuous dots
     inputText = inputText.replace(/_+/g, ''); // Remove underscores
+    inputText = inputText.replace(/[*~{}\[\]\(\)]/g, '');
+
     inputText = inputText.replace(/\s+_/g, ''); // Remove trailing underscores
 
     // Remove extra line spaces
