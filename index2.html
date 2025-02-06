@@ -66,9 +66,43 @@
             cursor: not-allowed;
         }
 
-     
+        .output-container {
+            width: 80%;
+            margin: 20px 0;
+        }
 
-        
+        .output-container p {
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #080808;
+            margin-bottom: 10px;
+            white-space: pre-wrap;
+        }
+
+        .chunk-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .chunk-navigation button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .chunk-info {
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
 
         .dark-mode-toggle {
             margin-top: 10px;
@@ -89,8 +123,8 @@
 <body>
     <h1>BETA</h1>
     <textarea id="inputText" placeholder="Enter your text here..."></textarea>
-    <button onclick="splitTextWithSpacing()">Replace</button>
-    <button style="margin-top: 20px;" onclick="copyEntireText()">Copy</button>
+    <button onclick="splitTextWithSpacing()">REPLACE</button>
+    <button style="margin-top: 20px;" onclick="copyEntireText()">Copy Entire</button>
 
     <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
@@ -1054,7 +1088,66 @@
             alert("All text copied to clipboard!");
         }
 
-       
+        function displayCurrentChunk() {
+            const outputContainer = document.getElementById('outputContainer');
+            outputContainer.innerHTML = '';
+
+            if (chunks.length > 0) {
+                const chunkText = document.createElement('p');
+                chunkText.textContent = chunks[currentChunkIndex];
+                chunkText.style.whiteSpace = "pre-wrap";
+                outputContainer.appendChild(chunkText);
+
+                const navigationDiv = document.createElement('div');
+                navigationDiv.classList.add('chunk-navigation');
+
+                const prevButton = document.createElement('button');
+                prevButton.textContent = 'Previous';
+                prevButton.disabled = currentChunkIndex === 0;
+                prevButton.onclick = () => {
+                    if (currentChunkIndex > 0) {
+                        currentChunkIndex--;
+                        displayCurrentChunk();
+                    }
+                };
+                navigationDiv.appendChild(prevButton);
+
+                const copyButton = document.createElement('button');
+                copyButton.textContent = 'Copy Chunk';
+                copyButton.onclick = () => {
+                    copyChunkToClipboard(chunks[currentChunkIndex]);
+                };
+                navigationDiv.appendChild(copyButton);
+
+                if (currentChunkIndex < chunks.length - 1) {
+                    const nextButton = document.createElement('button');
+                    nextButton.textContent = 'Next';
+                    nextButton.onclick = () => {
+                        if (currentChunkIndex < chunks.length - 1) {
+                            currentChunkIndex++;
+                            displayCurrentChunk();
+                        }
+                    };
+                    navigationDiv.appendChild(nextButton);
+                }
+
+                const chunkInfo = document.createElement('div');
+                chunkInfo.className = 'chunk-info';
+                chunkInfo.textContent = `Chunk ${currentChunkIndex + 1} of ${chunks.length}`;
+
+                outputContainer.appendChild(chunkInfo);
+                outputContainer.appendChild(navigationDiv);
+            }
+        }
+
+        function copyChunkToClipboard(chunk) {
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = chunk;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextarea);
+        }
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
