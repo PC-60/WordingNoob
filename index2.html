@@ -66,43 +66,9 @@
             cursor: not-allowed;
         }
 
-        .output-container {
-            width: 80%;
-            margin: 20px 0;
-        }
+     
 
-        .output-container p {
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #080808;
-            margin-bottom: 10px;
-            white-space: pre-wrap;
-        }
-
-        .chunk-navigation {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 10px 0;
-        }
-
-        .chunk-navigation button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .chunk-info {
-            font-weight: bold;
-            text-align: center;
-            margin-top: 10px;
-        }
+        
 
         .dark-mode-toggle {
             margin-top: 10px;
@@ -123,8 +89,8 @@
 <body>
     <h1>BETA</h1>
     <textarea id="inputText" placeholder="Enter your text here..."></textarea>
-    <button onclick="splitTextWithSpacing()">Split Text with Spacing</button>
-    <button style="margin-top: 20px;" onclick="copyEntireText()">Copy Entire</button>
+    <button onclick="splitTextWithSpacing()">Replace</button>
+    <button style="margin-top: 20px;" onclick="copyEntireText()">Copy</button>
 
     <button class="dark-mode-toggle" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
