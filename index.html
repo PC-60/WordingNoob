@@ -169,7 +169,7 @@
         <h1>Text Processor</h1>
         <textarea id="inputText" placeholder="Enter your text here..."></textarea>
         <button onclick="processText('replace')">Replace Words</button>
-        <button onclick="processText('delete')">Delete Words</button>
+        <button onclick="goToPage1()">Replace All</button>
         <button onclick="replaceSpecialCharacters()">Replace Special Characters</button>
         <button onclick="splitText()">Split Text</button> <!-- For Split Text behavior -->
         <button onclick="goToPage()">BETA </button> <!-- For Split Text with Spacing behavior -->
@@ -1208,6 +1208,10 @@
         }
 function goToPage() {
             window.location.href = "Untitled-1.html"; // Specify the target HTML file
+        }
+
+        function goToPage1(){
+         window.location.href = "index2.html"; 
         }
         function replaceWords(text, replacementsDict = replacements, useWordBoundary = true) {
             const changes = {};
